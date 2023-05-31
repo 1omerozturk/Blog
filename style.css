@@ -28,6 +28,7 @@ body::-webkit-scrollbar{
   height:5%;
   width: 100%;
  }
+ 
  .div-icon{
   display: flex;
   left: 2%;

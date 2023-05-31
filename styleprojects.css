@@ -6,6 +6,8 @@
     position: relative;
 
 }
+
+
 h1{
     
     text-align: center;
@@ -18,7 +20,7 @@ h1{
 .but{
     position: relative;
 }
-button{
+.btn1{
    position: absolute;
    left: 50%;
    top: 50%;
@@ -26,7 +28,7 @@ button{
     text-shadow: 2px 2px 4px rgba(0, 132, 255, 0.5);
     font-weight: bolder;
 }
-button a{
+.btn1 a{
     color: black;
     text-decoration: none;
     font-size:larger;
