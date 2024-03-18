@@ -130,10 +130,26 @@ img.avatar {
   clear: both;
 }
 
+
+
 /* Grid Item */
 .grid-sizer,
 .grid-item {
+  width: 50%;
+}
+.grid-sizer,
+.grid-item2 {
+  width: 33%;
+  margin:0 auto;
+ margin-top: 10px;
+ margin-bottom: 10px;
+}
+
+.grid-sizer,
+.grid-item {
   width: 100%;
+ margin-top: 10px;
+ margin-bottom: 10px;
 }
 
 .grid-item {
@@ -143,10 +159,18 @@ img.avatar {
 @media (min-width: 48em) {
   .grid-sizer,
   .grid-item {
-    width: 50%;
+    width: 25%;
   }
   .grid-item {
-    float:left;
+    padding: 6px;
+  }
+}
+@media (max-width: 30em) {
+  .grid-sizer,
+  .grid-item {
+    width: 100%;
+  }
+  .grid-item {
     padding: 6px;
   }
 }
@@ -157,6 +181,38 @@ img.avatar {
   width: 100%;
   max-width: 100%;
 }
+.grid-item2 {
+  padding-bottom: 12px;
+}
+
+@media (max-width: 48em) {
+  .grid-sizer,
+  .grid-item2 {
+    width: 100%;
+  }
+  .grid-item2 {
+    padding: 6px;
+  }
+}
+@media (min-width: 30em) {
+  .grid-sizer,
+  .grid-item2 {
+    width: 100%;
+  }
+  .grid-item2 {
+    padding: 6px;
+  }
+}
+
+
+.grid-item2 img {
+  display: block;
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+}
+/* grid-item-p */
+
 
 /* Portfolio */
 .portolio-section .container {
@@ -239,6 +295,7 @@ footer a:not(.nav-link) {
   max-width: 1024px;
   margin: 0 auto;
 }
+
 
 .text-small {
   font-size: 0.875rem;

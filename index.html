@@ -48,7 +48,7 @@
       </style>
     </noscript>
   </head>
-  <body id="top">
+  <body id="top" data-bs-spy="scroll" data-bs-target="#header-nav">
     <header class="bg-light">
       <nav
         class="navbar navbar-expand-lg navbar-light bg-light"
@@ -59,6 +59,7 @@
           <a class="link-dark navbar-brand site-title mb-0" href="#"
             >Ömer Öztürk</a
           >
+
           <button
             class="navbar-toggler"
             type="button"
@@ -85,10 +86,13 @@
                 <a class="nav-link" href="#portfolio">Projelerim</a>
               </li>
               <li class="nav-item">
+                <a class="nav-link" href="#certf">Sertifikalarım</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" href="#experience">Deneyimlerim</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#contactPhone">İletişim</a>
+                <a class="nav-link" href="#contact">İletişim</a>
               </li>
             </ul>
           </div>
@@ -103,9 +107,11 @@
               <div class="row">
                 <div class="col-lg-6 p-2">
                   <img
-                    class="img-fluid"
+                    class="img-fluid rounded bg-dark bg-gradient"
                     src="./images/0mer.0zturk.png"
                     alt="hello"
+                    height="500"
+                    width="500"
                   />
                 </div>
                 <div class="col-lg-6">
@@ -252,7 +258,7 @@
                 data-aos-delay="100"
               >
                 <img
-                  class="avatar img-fluid rounded-square mt-2"
+                  class="avatar img-fluid rounded-circle mt-2"
                   src="images/avatar.jpg"
                   width="300"
                   height="300"
@@ -496,9 +502,9 @@
             </div>
           </div>
         </div>
-        <div class="section px-2 px-lg-4 pt-5" id="portfolio">
-          <div class="container">
-            <div class="text-center mb-5">
+        <div class="section px-3 px-lg-4 pt-5 g-5" id="portfolio">
+          <div class="container-narrow">
+            <div class="text-center">
               <h2 class="marker marker-center">Projelerim</h2>
             </div>
             <div
@@ -506,23 +512,31 @@
               data-aos="zoom-in-up"
               data-aos-delay="100"
             >
-              <div class="grid-sizer">
-              <div class="grid-item">
-                <a href="https://github.com/1omerozturk/car_speed_detection">
-                  <figure class="portfolio-item">
-                    <img
-                    src="https://github.com/1omerozturk/car_speed_detection/blob/main/img.png?raw=true"
+            <div class="grid-sizer">
+                <div class="row">
+                    <div class="col-sm-4 ">
+                    <div class="grid-item">
+                      <a href="https://github.com/1omerozturk/car_speed_detection">
+                    
+                      <figure class="portfolio-item">
+                        <img
+                        src="https://github.com/1omerozturk/car_speed_detection/blob/main/img.png?raw=true"
+    
+                          data-bp="https://github.com/1omerozturk/car_speed_detection/blob/main/img.png?raw=true"
+                          data-caption="Example of an optional caption."
+                        />
+                        <figcaption>
+                          <h4 class="h5 mb-0">Image Processing</h4>
+                          <div>OpenCV - Python</div>
+                        </figcaption>
+                      </figure>
+                      </a>
+                  </div>
+                </div>
+                </div>
+                <div class="row">
 
-                      data-bp="https://github.com/1omerozturk/car_speed_detection/blob/main/img.png?raw=true"
-                      data-caption="Example of an optional caption."
-                    />
-                    <figcaption>
-                      <h4 class="h5 mb-0">Image Processing</h4>
-                      <div>OpenCV - Python</div>
-                    </figcaption>
-                  </figure></a
-                >
-              </div>
+                <div class="col-sm-4">
               <div class="grid-item">
                 <a href="https://github.com/1omerozturk/todo-app-django">
                   <figure class="portfolio-item">
@@ -539,7 +553,12 @@
                   </figure></a
                 >
               </div>
-              <div class=" grid-item mt-1">
+              </div>
+            </div>
+            <div class="row">
+              
+              <div class=" col-sm-3 ">
+              <div class=" grid-item">
                 <a href="https://www.youtube.com/watch?v=kkwnOCuCOPU">
                   <figure class="portfolio-item">
                     <img
@@ -554,7 +573,10 @@
                   </figure>
                   </a>
               </div>
-              <div class=" grid-item mt-5">
+              </div>
+              </div>
+              <div class="col-sm-3">
+              <div class=" grid-item">
                 <a href="https://github.com/1omerozturk/MVC_Admin_Panelli_CV">
                   <figure class="portfolio-item">
                     <img
@@ -569,10 +591,263 @@
                   </figure>
                   </a>
               </div>
+              </div>
+              <div class="col-sm-3">
+              <div class="grid-item">
+                <a href="https://github.com/1omerozturk/">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/AI.gif"
+                      height="200"
+                      data-bp="./images/certifics/AI.gif"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">Title extractor with video</h4>
+                      <div>Python</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              </div>
+            </div>
+            </div>
             </div>
           </div>
         </div>
+
+        <!-- Sertifikalarım -->
+     
+
+      
+        
+        <div class="section pt-5 " id="certf">
+          <div class="container-narrow">
+            <div class="text-center mb-5">
+              <h2 class="marker marker-center">Sertifikalarım</h2>
+            </div>
+            <div
+              class="grid bp-gallery pb-5"
+              data-aos="zoom-in-up"
+              data-aos-delay="100"
+            >
+              <div class="grid-sizer">
+                <div class="row">
+                  <div class="col-sm-4 col-md-3">  
+                  <div class="grid-item2">
+                <a href="https://github.com/1omerozturk">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/1.png"
+
+                      data-bp="./images/certifics/1.png"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">Ağ Temelleri</h4>
+                      <div>Network</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              <div class="grid-item2">
+                <a href="https://github.com/1omerozturk">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/6.png"
+
+                      data-bp="./images/certifics/6.png"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">Machine Learning</h4>
+                      <div>Python</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              </div>
+              <div class="col-sm-4 col-md-3">
+              <div class="grid-item2">
+                <a href="https://github.com/1omerozturk">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/2.png"
+
+                      data-bp="./images/certifics/2.png"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">C#</h4>
+                      <div>Programlama</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              <div class="grid-item2">
+                <a href="https://github.com/1omerozturk">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/13.png"
+
+                      data-bp="./images/certifics/13.png"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">Dotnet MVC5</h4>
+                      <div>Udemy</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              </div>
+              <div class="col-sm-4 col-md-3">
+              <div class="grid-item2">
+                <a href="https://github.com/1omerozturk">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/12.png"
+
+                      data-bp="./images/certifics/12.png"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">Git Github</h4>
+                      <div>BTK Akademi</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              <div class="grid-item2">
+                <a href="https://github.com/1omerozturk">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/5.png"
+
+                      data-bp="./images/certifics/5.png"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">JQuery</h4>
+                      <div>BTK Akademi</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              </div>
+              <div class="col-sm-4 col-md-3">
+              <div class="grid-item2">
+                <a href="https://github.com/1omerozturk">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/cisco.jpeg"
+
+                      data-bp="./images/certifics/cisco.jpeg"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">Intro Cybersecurity</h4>
+                      <div>Cısco</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              <div class="grid-item2">
+                <a href="https://github.com/1omerozturk">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/solopy1.jpeg"
+
+                      data-bp="./images/certifics/solopy1.jpeg"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">Python</h4>
+                      <div>Sololearn</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              </div>
+              <div class="col-sm-4 col-md-6">
+              <div class="grid-item2">
+                <a href="https://github.com/1omerozturk">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/solopy2.jpeg"
+
+                      data-bp="./images/certifics/solopy2.jpeg"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">Data Structures Python</h4>
+                      <div>Sololearn</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              <div class="grid-item2">
+                <a href="https://github.com/1omerozturk">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/10.png"
+
+                      data-bp="./images/certifics/10.png"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">React</h4>
+                      <div>BTK Akademi</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              </div>
+              <div class="col-sm-4 col-md-6">
+              <div class="grid-item2">
+                <a href="https://github.com/1omerozturk">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/9.png"
+
+                      data-bp="./images/certifics/9.png"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">Python Bootcamp</h4>
+                      <div>Global AI HUB</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              <div class="grid-item2">
+                <a href="https://github.com/1omerozturk">
+                  <figure class="portfolio-item">
+                    <img
+                    src="./images/certifics/8.png"
+
+                      data-bp="./images/certifics/8.png"
+                      data-caption="Example of an optional caption."
+                    />
+                    <figcaption>
+                      <h4 class="h5 mb-0">Python</h4>
+                      <div>Global AI HUB</div>
+                    </figcaption>
+                  </figure></a
+                >
+              </div>
+              </div>
+            </div>
+          </div>
+          </div>
         </div>
+        </div>
+        </div>
+
+
+
+
+
         <div class="section px-3 px-lg-4 pt-5" id="experience">
           <div class="container-narrow">
             <div class="text-center mb-5">
@@ -769,7 +1044,7 @@
               <p>
                 <b>
 
-                  Jr. Backnd Developer </b> & AI - Data Sciener
+                  Jr. Backend Developer </b> & AI - Data Sciener
                 </p>
               <div class="social-nav">
                 <nav role="navigation">
