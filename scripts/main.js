@@ -35,26 +35,6 @@
 });
 
 
-  document.getElementById('mailsend').addEventListener('click', function() {
-    // E-posta adresini ve konuyu belirleyebilirsiniz
-    // var emailAddress =" document.getElementById("email")";
-    var emailAddress ="omer.ozturk.or.ok@gmail.com";
-    // var message = document.getElementById("message");
-
-    // mailto protokolü ile e-posta adresini ve konuyu birleştirin
-    var mailtoLink = 'mailto:' + emailAddress + '?message= +' + encodeURIComponent(message)+document.getElementById("name");
-
-    // E-posta istemcisini açmak için bir link oluşturun
-    var newWindow = window.open(mailtoLink, '_blank');
-    if (newWindow) {
-      // Yeni pencere başarıyla açıldıysa, pencereyi kapatın (isteğe bağlı)
-      newWindow.close();
-    } else {
-      // Yeni pencere açılamazsa kullanıcıya bilgi verin (isteğe bağlı)
-      alert('E-posta gönderme işlemi başarısız oldu. Lütfen manuel olarak e-posta gönderin.');
-    }
-  });
-
 
   /**
    * Navbar effects and scrolltop buttons upon scrolling
