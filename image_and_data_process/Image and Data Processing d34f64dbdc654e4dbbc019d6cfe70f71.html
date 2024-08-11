@@ -1,0 +1,774 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Image and Data Processing</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="d34f64db-dc65-4e4d-bbc0-19d6cfe70f71" class="page sans"><header><img class="page-cover-image" src="https://i.stack.imgur.com/7f2EP.png" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><img class="icon" src="https://i.stack.imgur.com/31gcM.png"/></div><h1 class="page-title">Image and Data Processing</h1><p class="page-description"></p></header><div class="page-body"><p id="a980aa42-5861-4f6e-a6f4-df99bce9836b" class="">
+</p><p id="abaced11-cb16-45c1-b889-26171ad09035" class="">
+</p><h1 id="c4f81238-586c-4acf-848d-ef00f71a8161" class=""><strong>Görüntü işleme</strong></h1><p id="a21e0afc-420e-43b1-bf4e-346f16e76302" class="">Bir görüntüden yararlı bilgiler çıkarmak ya da bir görüntü elde etmek için kullanılan algoritmalar ile gerçekleştirmedir.</p><p id="4946a59a-518a-4265-a30c-29782dd807e0" class="">Görüntü işlemenin temel adımları şunlardır:</p><ul id="48c0aa92-a630-478c-927f-4eaa79f7d2d9" class="bulleted-list"><li style="list-style-type:disc">Görüntünün çalışma ortamına aktarılması,</li></ul><ul id="d488d3b3-c521-45f1-92b0-f387e5efd7a8" class="bulleted-list"><li style="list-style-type:disc">Alınan görüntünün işlenerek analiz edilmesi ve görüntülenmesi,</li></ul><ul id="601cc7dc-0c84-4a16-8ec0-4dacf7da041f" class="bulleted-list"><li style="list-style-type:disc">Analiz sonucu görüntü raporunun ortaya çıkması</li></ul><p id="3f0458b2-17fd-49c9-9dbb-86ccc406bab4" class="">Görüntü işleme aslında <span style="border-bottom:0.05em solid"><strong>matrisler</strong></span> üzerinde yapılan işlemlerdir.</p><p id="f5fccbf8-5b29-4c20-ac8c-cd783bc6d2ef" class="">Pikseli oluşturan matris hücrelerinin üzerinde işlemler yapıyoruz. Her bir pikselin bir değeri vardır.</p><p id="e9026f10-f7e1-4839-99a7-fd578c955dd1" class="">Bir piksel 0 ile 255 arasında değer alır 0 siyah ve 255 beyazdır aradaki diğer değerler ile farklı renkler oluşturulur.</p><p id="be6d11bc-aa97-4edb-974f-bfb3327a1626" class="">
+</p><p id="d6c6e486-e440-493b-a81b-ac0656bc6d35" class="">RGB (Red, Green, Blue) ana renk modelde;</p><ul id="b897b833-e6fd-4b27-9d54-be6df02e7261" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-red">Kırmızı: (255,0,0)</mark></li></ul><ul id="c5c9f4f7-602e-4f1a-80ec-b976ae773555" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal">Yeşil: (0,255,0)</mark></li></ul><ul id="ad80e2cc-951c-461a-b146-481753733cfb" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">Mavi: (0,0,255)</mark></li></ul><hr id="383cc5cf-762c-444c-822d-2a4be6add099"/><h2 id="abf83854-b2c4-41d5-8c07-fe3af56c848d" class="">Görüntü İşlemenin Amaçları:</h2><ul id="0871816f-eed4-4b38-aeec-89f16eb4e169" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid"><strong>Görselleştirme</strong></span></summary><p id="623a742b-bca9-4d42-959e-52ede1d69b80" class="">Görünmesi zor nesneleri gözlemleme</p></details></li></ul><ul id="22adb901-c41b-4df0-b91a-9a35873962f8" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid"><strong>Görüntü Keskinleştirme</strong></span></summary><p id="e141d1f1-e70c-4016-9ea2-9b9fa5f5f696" class="">Gürültülü görüntüleri iyileştirme.</p></details></li></ul><ul id="67b95abf-3c26-43ce-903a-112efa6aabed" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid"><strong>Görüntü Alımı</strong></span></summary><p id="42b3bd19-8baa-4b12-b873-59ec11591d9c" class="">İlgi çekici yüksek çözünürlüklü görüntü alma.</p></details></li></ul><ul id="770e8317-cc9a-432f-9a17-350a0710ef11" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid"><strong>Desen Tanıma</strong></span></summary><p id="23f62842-0729-4026-8959-7d87dd4adecd" class="">Bir görüntüdeki çeşitli nesneleri tanımlama.</p></details></li></ul><ul id="5b1c1a1c-b3c4-4faa-be31-687d08c981a0" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid"><strong>Görüntü Tanıma</strong></span></summary><p id="4001cb11-74db-4d17-b371-a81743a74501" class="">Bir görüntüdeki nesneleri ayırt etme.</p></details></li></ul><hr id="e44e01c4-896a-4802-80ca-4ac5249ec268"/><p id="8ba7d154-7750-4dfc-ad5d-0557c09111dc" class="">
+</p><h2 id="57d718e8-ec07-4139-9aa6-dff4ecfffb28" class="">NumPy Nedir ?</h2><blockquote id="98c4eb4f-8d33-4d0a-8e66-34868c1a421a" class="">Görüntü işleme için Temel Bir Veri İşleme Kütüphanesidir.</blockquote><blockquote id="63347f51-06a0-41ec-aed3-1701fc9550a3" class="">NumPy, “Numerical Python” kelimelerinin kısaltmasıdır ve önemli bir veri işleme kütüphanesidir.</blockquote><blockquote id="eafee4f0-4599-484b-8394-a933607194ec" class="">NumPy, çok boyutlu dizilerle çalışmayı ve bu diziler üzerinde yüksek performanslı matematiksel işlemler yapmayı kolaylaştıran bir kütüphanedir. Görüntü işleme, veri analizi, bilimsel hesaplama ve makine öğrenimi gibi birçok alanda kullanılır.</blockquote><hr id="daed4066-ed9f-442f-970f-3eaf0f30523c"/><p id="5534fdde-149d-4d4c-be4f-77e9072477c0" class="">
+</p><h3 id="e9c22c3d-6b61-4ff8-9997-2dd80c4e91e4" class="">NumPy Temel Özellikleri</h3><ul id="f5382951-8474-4b21-a89c-d1b1bf3aef7f" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid"><strong>N Boyutlu Diziler(Arrays)</strong></span></summary><p id="0810cc98-33e0-41d6-85df-3b4b3c295f8c" class="">NumPyN boyutlu dizilerle çalşmayı destekler.</p><p id="f89a3a75-bdba-4b60-a11a-9cde58ad4cd9" class="">Bu matrisleri vektörler ve çok boyutlu veriler gibi veri yapıları ile çalışırken kullanışlıdır.</p></details></li></ul><ul id="0f0e0310-2091-4796-83d9-9cc181e739f6" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid"><strong>Yüksek performanslı İşlemler</strong></span></summary><p id="1685df81-d5e9-47ef-9e2d-39e92dce83cc" class="">NumPy, C ve Fortran gibi düşük seviye dillerle yazılmış altta yatan işlevleri kullanarak yüksek performanslı matematiksel işlemler gerçekleştirir. Bu nedenle büyük veri setleri üzerinde hızlı hesaplamalar yapmayı sağlar.</p></details></li></ul><ul id="4b5ef4ad-100a-44c3-8946-ef601be4afec" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid"><strong>Yayınlama(Broadcasting)</strong></span></summary><p id="006c5acf-8034-4de5-9b9c-10adbbc97220" class="">NumPy, farklı boyutlardaki dizilerle işlem yaparken ototmatik olarak boyutları eşleştirebilir  ve işlemi gerçekleştirebilir. Bu işlem kodunu daha basit ve okunabilir yapar.</p></details></li></ul><hr id="bf7f7968-a21d-4f2d-804f-2cb95fd3b4c8"/><p id="5e9475e2-fe10-4780-990d-48e211fcd7c0" class="">
+</p><h3 id="085404ff-9b6c-4a46-adbd-019161d8e423" class="">NumPy İndirme ve Temel Kullanımı</h3><p id="f044b3f2-86dc-495a-861a-2142975d2944" class="">
+</p><ul id="b05d134d-218b-4bf7-9e91-cecb2e98f2c3" class="bulleted-list"><li style="list-style-type:disc">NumPy Kütüphanesini İndirme</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="20e2ddf5-ee7e-43e0-b45f-6a79c8da33cd" class="code"><code class="language-Shell">pip install numpy</code></pre><p id="19342e83-746e-40fe-9924-18d7438b1c3d" class="">
+</p><ul id="ef7ef5fd-88b0-4a1a-95b6-fabace9fc190" class="bulleted-list"><li style="list-style-type:disc">NumPy Kütüphanesini Dahil Etme</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="3c7467d6-23da-49e1-9a6c-40758af7e674" class="code"><code class="language-Python">import numpy as np # kısaltma olarak kullanma için as kullanılır python&#x27;da.</code></pre><p id="b584c16a-7df7-4350-8ac3-7867822e966c" class="">
+</p><ul id="a92ba3f9-7866-4cb8-a008-2b4369bacc75" class="bulleted-list"><li style="list-style-type:disc">NumPy Örnek Dizi Oluşturma</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1ff1ecf6-d182-4079-8ef2-c03ca7407dbe" class="code"><code class="language-Python"># Bir liste veya tuple olarak liste oluşturma
+arr=np.array([1,2,3,4,5])
+
+# sıfırlardan oluşan dizi
+zero=np.zeros((3,3))
+
+#B Birlerden oluşan dizi
+one=np.ones((2,2))</code></pre><p id="90085e28-8526-4711-8dd8-2ab27ed75c27" class="">
+</p><ul id="3a69eb8d-5c34-4832-a927-ad4f5380edf5" class="bulleted-list"><li style="list-style-type:disc">NumPy Dizi İşlemleri</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="29678719-4838-464e-95e8-84fdf9fc552b" class="code"><code class="language-Python"># Dizi elemanlarına erişim
+print(arr[0])   # İlk eleman
+print(arr[1:4]) # Belirli Aralıktaki veriler
+print(arr[-1])  # Son eleman
+
+# Dizi matematiksel işlemler
+result=arr+2  # Diziye 2 ekler.
+sum_arr=np.sum(arr) # Dizinin elemanlarının toplamını verir.</code></pre><p id="165354db-b7d0-450d-8f6d-d2cd144aa2d0" class="">
+</p><ul id="4529d06c-1434-41ed-925c-be5b3d7d1a9e" class="bulleted-list"><li style="list-style-type:disc">Dizi Şekil ve Boyutu</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="54854e53-e935-4aef-97be-6cf2fdad8013" class="code"><code class="language-Python">shape=arr.shape # Dizi şekli
+ndim=arr.ndim   # Dizi boyutu
+size=arr.size   # Dizi eleman sayısı</code></pre><p id="03741d9a-16cd-4346-a991-1affbc53efb5" class="">
+</p><ul id="4576d54b-b440-4bf9-892f-419317667ac1" class="bulleted-list"><li style="list-style-type:disc">İndeksleme ve Dilimleme</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="33572dd2-6e02-4206-b672-9dff90a33db3" class="code"><code class="language-Python">sub_arr=arr[1:3] # İkinci ve Üçüncü elemanları alır.
+sub_matrix=matrix[0:2, 1:3] # İlk iki satırın ikinci ve üçüncü sütünları alır.</code></pre><h2 id="54eb83fa-a9ea-496e-925a-09d11cbb4913" class="">OpenCV nedir ?</h2><blockquote id="d2247ac0-1a2e-4545-9549-39bc504bd58c" class="">Görüntü işleme için yazılmış açık kaynak kodlu bir kütüphanedir.</blockquote><blockquote id="fa6ea8a0-fca5-45fa-8df7-5690f60c4f9a" class="">OpenCV ilk olarak 1999 yılında Intel’in Rusya’daki laboratuvarında geliştirilmeye başlanmış bir projedir.</blockquote><blockquote id="53fabefd-0e3f-4448-85c7-d14179ff3c41" class="">OpenCV kütüphanesi içerisinde görüntü işlemeye (image processing) ve makine öğrenmesine (machine learning) yönelik 2500’den fazla algoritma bulunmaktadır.</blockquote><blockquote id="c80cc9cf-241c-4b21-89ba-85f460f4cead" class="">Şu an en çok kullanılan kütüphanedir görüntü işleme alanında.</blockquote><p id="48039658-c78f-4a6f-b70d-b8f4f15286e4" class="">
+</p><h3 id="e841a847-3b62-44c3-b831-790c7f43f792" class="">OpenCV Yükleme Ve Kullanma</h3><ol type="1" id="0641d899-54a5-426a-920b-178f506e0889" class="numbered-list" start="1"><li>Öncelikle Python kendi sitesinden python indirmeliyiz.</li></ol><ol type="1" id="c2872a86-b6e7-4a89-8c6a-2062f144787a" class="numbered-list" start="2"><li>Kurulumu kolay bir şekilde yapılabilir.</li></ol><hr id="473ba666-3079-4f55-a685-b06d06bcc1e0"/><p id="32185348-1981-4741-89cd-7114ad5646cc" class="">
+</p><p id="71c85e4c-7d78-4b38-9c82-fa9b90ca8675" class="">PC arama çubuğuna <strong>CMD </strong>ya da <strong>PowerShell</strong> yazarak bu kodları yazalım.</p><p id="5b6ff746-f576-448e-a5d4-dfa8b698364f" class="">
+</p><ul id="1e4cfafa-360b-4acd-b328-46386c6223a3" class="bulleted-list"><li style="list-style-type:disc">pip (python kütüphane ekleme yardmcısı) güncelleme kodu:</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="a34ea39e-e778-4e8c-bfdc-b540aa503d20" class="code"><code class="language-Shell">python.exe -m pip install --upgrade pip</code></pre><p id="1c9ab0a1-9788-4240-809a-4e8b3fc788bf" class="">
+</p><ul id="6a1d59e7-f3e4-488d-8aef-c527fc702fec" class="bulleted-list"><li style="list-style-type:disc">OpenCV indirme kodu:</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="9cd9b63c-e288-4205-8569-416087600160" class="code"><code class="language-Shell">pip install opencv-python</code></pre><p id="0b744618-081d-49bc-9c31-08bf48d9172e" class="">
+</p><ul id="8b1d196b-c8c9-4f4e-8ae5-98e567b00eb4" class="bulleted-list"><li style="list-style-type:disc">OpenCV Kütüphanesini Ekleme</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="a9e25d1f-1c45-438d-ae65-e160930625a9" class="code"><code class="language-Python">import cv2 </code></pre><p id="a92e3945-1511-4367-bd1f-e9162f451ae1" class="">
+</p><h2 id="c7953cb8-b573-4c61-818a-caa666e0de57" class="">OpenCV Resim İşlemleri</h2><p id="cd5e04bb-0b1a-4e04-826d-a89dd0868dc8" class="">
+</p><ul id="e3b63f62-6478-4303-98d8-abacdb10e0cf" class="bulleted-list"><li style="list-style-type:disc"><strong>Resim Okuma </strong>(imread)</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="7f4ba7d5-ec15-4e4a-a44b-e0ffcc267248" class="code"><code class="language-Python">import cv2
+resim=cv2.imread(&quot;resim_dosyasinin_yolu&quot;) # imread iki parametre alır: 
+# filename ve flags flags zorunlu değildir.
+# flags 0 verilir ise resim gri, flags 1 verilir ise aynı, -1 verilir ise </code></pre><ul id="cf200aab-d9d2-4838-a75c-1ed69ca1c799" class="bulleted-list"><li style="list-style-type:disc"><strong>Resmi Gösterme </strong>(imshow)</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="e01c5954-46a3-4a1d-8c6b-37576b74aca5" class="code"><code class="language-Python">imshow(&quot;pencereAdi&quot;,resim) # iki parametre alır: winname(Açılacak windows pecere ismi).
+							# ikinci parametre, mat ise imread ile okunan resim dosyası değişkeni olacak.
+
+# Bu şekilde kalırsa pencere açılıp kapanır ve biz göremeyiz pencereyi bekletmek için
+
+cv2.waitKey(0) # herhangi bir tuşa basıncaya kadar açık kalması için 
+cv2.destroyAllWindows() # resim kapandıktan sonra tüm pencereleri kapatır.</code></pre><figure id="d19e37ec-86d0-4f2c-b040-8feb291cde82" class="image"><a href="Image%20and%20Data%20Processing%20d34f64dbdc654e4dbbc019d6cfe70f71/Untitled.png"><img style="width:624px" src="Image%20and%20Data%20Processing%20d34f64dbdc654e4dbbc019d6cfe70f71/Untitled.png"/></a></figure><p id="5aff4a1c-a7ed-4004-a8fb-761fbc489ac6" class="">
+</p><ul id="428d1339-9130-45e9-a956-424d9065d377" class="bulleted-list"><li style="list-style-type:disc"><strong>Resmi Kaydetme</strong></li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="d566c522-4243-4633-b7b1-31fd4e11d701" class="code"><code class="language-Python">resim=cv2.imread(&quot;dosya_yolu&quot;,0) # Resmi gri olarak okuma
+cv2.imshow(&quot;pencere_adi&quot;,resim) # Resmi gösterme
+cv2.imwrite(&quot;kayit_ismi&quot;,resim,) # imwrite en az iki parametre alır dosya ve yeni ismi
+# yeni isimde uzantısıda verilmelidir. ör(.png, .jpg,..)</code></pre><p id="2d1668e1-4de6-4081-b634-326eb8cd33a9" class="">
+</p><figure id="2b1f74f7-01d9-45a7-a3e0-454955997f8e" class="image"><a href="Image%20and%20Data%20Processing%20d34f64dbdc654e4dbbc019d6cfe70f71/Untitled%201.png"><img style="width:672px" src="Image%20and%20Data%20Processing%20d34f64dbdc654e4dbbc019d6cfe70f71/Untitled%201.png"/></a></figure><p id="b5526462-f6c6-4723-8fa7-0ebfeb14ad09" class="">
+</p><hr id="41b7fb2f-5bc3-43e1-adaf-adf987fad14d"/><p id="ebd9ddf4-4a63-4568-9cd4-dd6444a2e21e" class="">
+</p><h1 id="4bb3e92c-b722-4102-b45a-0a4f5a0a9823" class="">Matplotlib Nedir ?</h1><p id="2004584a-9988-4256-99f5-3b8bd63135e3" class="">Python ile çeşitli <span style="border-bottom:0.05em solid"><strong>grafikler</strong></span><strong>, </strong><span style="border-bottom:0.05em solid"><strong>diyagramlar</strong></span><strong>, </strong><span style="border-bottom:0.05em solid"><strong>histogramlar</strong></span><strong>, </strong><span style="border-bottom:0.05em solid"><strong>haritalar </strong></span>ve <span style="border-bottom:0.05em solid"><strong>görselleştirmeler</strong></span><span style="border-bottom:0.05em solid"> </span>oluşturmak için kullanılan güçlü bir kütüphanedir.</p><p id="9779a6ff-cd39-45cc-a328-51fae1c4326d" class="">Matplotlib, Python’da <strong>2D </strong>grafikler oluşturmak için en çok kullanılan kütüphanedir. Matplotlib, <strong>NumPy </strong>ve <strong>SciPy </strong>gibi diğer bilimsel kütüphanelerle uyumlu çalışır ve farklı formatlarda çıktılar üretebilir. Matplotlib, <strong>MATLAB </strong>benzeri bir arayüze sahip olduğu için, MATLAB’den Python’a geçiş yapanlar için de kolaylık sağlar.</p><h2 id="8bc5c635-2386-40f7-80eb-9b8965c5f0ed" class="">Matplotlib Kütüphanesini Yükleme</h2><ul id="e8f791a3-82e8-4ac3-951e-a3d7acc496e7" class="bulleted-list"><li style="list-style-type:disc">Çalışma ortamında <strong><strong><strong><strong>cmd </strong></strong></strong></strong>(komut istemcisi) açılarak aşağıdaki kod yazılır:</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="8495a185-dae2-457d-a73e-ab0470e6277b" class="code"><code class="language-Python">pip install matplotlib</code></pre><p id="a2b688c2-0ed2-4641-9b2f-e8fe28de4893" class="">ya da python-3 için direkt indirmek için:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="8eab1890-93a1-4b81-931f-27bc25eb70c3" class="code"><code class="language-Python">pip3 install matplotlib</code></pre><p id="5cf2c4f9-4a0b-4de6-834c-a184638356b2" class="">
+</p><ul id="2b5aa065-b989-4c36-95b8-9ff6755e4ae5" class="bulleted-list"><li style="list-style-type:disc">Kütüphaneyi projelere dahil etme:</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="63cf917a-f20f-428c-9847-8b55f57dd56d" class="code"><code class="language-Python">import matplotlib.pyplot as plt</code></pre><h2 id="d0e16aac-eeed-4e66-8b58-3e608530aca3" class="">Matplotlib Temel Bileşenleri</h2><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><mark class="highlight-teal"><strong>Figure: </strong></mark></summary><div class="indented"><p id="848057a0-cb66-4281-9722-0a88ebd5ece9" class="">Grafiklerin çizildiği en üst seviyedeki konteynırdır. Bir figure, birden fazla <em>axes</em>, <em>toolbar</em>, <em>title</em>, <em>legend </em>gibi öğeler içerebilir.</p></div></details><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><mark class="highlight-teal"><strong>Artist</strong></mark><mark class="highlight-teal">:</mark> </summary><div class="indented"><p id="1a1d9384-4cf4-4140-a975-7054ef14ae33" class="">Figure, axes, axis gibi grafik öğelerinin hepsi artist sınıfından türetilmiştir. Bir artist, grafikte görünen herhangi bir şeydir. Bir artist, özelliklerini (<em>renk</em>, <em>boyut</em>, <em>şekil</em>, vb.) ve davranışlarını (<em>çizim</em>, <em>silme</em>, <em>güncelleme</em>, vb.) belirleyen birçok metoda sahiptir.</p></div></details><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><mark class="highlight-teal"><strong>Axis</strong></mark><mark class="highlight-teal">:</mark> </summary><div class="indented"><p id="cf3abb64-b8a1-41ac-9056-13a7297d2d86" class="">Bir axes’in <strong>x </strong>veya <strong>y</strong> eksenidir. Bir axis, eksenin değer aralığını, bölüntülerini, etiketlerini ve başlığını kontrol eder.</p></div></details><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0"><strong><strong><strong><strong><strong><strong>Axes: </strong></strong></strong></strong></strong></strong></summary><div class="indented"><p id="fc9c3b23-ecdc-4b36-bdbc-8313900f5e38" class=""><mark class="highlight-default">Bir figure içindeki bir grafiktir. Bir figure, birden fazla axes içerebilir, ancak bir axes sadece bir figure’a ait olabilir. Bir axes, </mark><strong><mark class="highlight-default">x-axis</mark></strong><mark class="highlight-default">, </mark><strong><mark class="highlight-default">y-axis</mark></strong><mark class="highlight-default">, </mark><strong><mark class="highlight-default">ticks</mark></strong><mark class="highlight-default">, </mark><strong><mark class="highlight-default">labels</mark></strong><mark class="highlight-default">, </mark><strong><mark class="highlight-default">title</mark></strong><mark class="highlight-default">, </mark><strong><mark class="highlight-default">grid</mark></strong><mark class="highlight-default"> gibi öğelerden oluşur.</mark></p></div></details><h2 id="86edff10-4e3a-4441-91e3-9c0bc2a279d3" class="">Matplotlib Grafik Oluşturma</h2><p id="60cea712-c44c-42a3-8af5-4e26492bf72c" class="">Matplotlib ile grafik oluşturmanın 2 yolu vardır:</p><ol type="1" id="77def298-753b-46b7-ab56-b2a61855a664" class="numbered-list" start="1"><li><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Pyplot API:</span></strong></mark> MATLAB benzeri bir arayüz sunar. Pyplot modülü, figure, axes, axis gibi nesneleri otomatik olarak oluşturur ve yönetir. Pyplot API, basit grafikler oluşturmak için uygundur, ancak karmaşık grafikler için yeterli kontrol sağlamaz.</li></ol><ol type="1" id="7faf7e6c-73be-49a1-98bb-22a16a08a0a6" class="numbered-list" start="2"><li><mark class="highlight-blue"><span style="border-bottom:0.05em solid"><strong>Object-Oriented API:</strong></span></mark> Grafik nesnelerini doğrudan oluşturur ve yönetir. Object-Oriented API, daha fazla esneklik ve özelleştirme imkanı sunar, ancak daha fazla kod yazmayı gerektirir.</li></ol><p id="6c62766d-cba4-4ada-9438-c8171f00f15e" class="">
+</p><hr id="f1762c9a-d5d4-40ad-b9f5-6e280a647557"/><h3 id="3e5d705f-9136-453e-9235-d037ce94da59" class="">Matplotlib Grafik Türleri ve Örnek Kodları </h3><p id="551e86c4-5035-4c6e-b296-2887c62657c3" class="">
+</p><h3 id="4dcf181b-5722-4017-8db5-44aa4a7e229c" class="">Çizgi Grafiği</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="07adcaa0-42da-4918-b17f-25a5fcf8c4fd" class="code"><code class="language-Python">import matplotlib.pyplot as plt
+x = [1, 2, 3, 4, 5]
+y = [10, 14, 8, 5, 12]
+
+plt.plot(x, y)
+plt.xlabel(&#x27;X Ekseni&#x27;)
+plt.ylabel(&#x27;Y Ekseni&#x27;)
+plt.title(&#x27;Basit Bir Çizgi Grafiği&#x27;)
+plt.show()</code></pre><p id="05ab4d23-4798-4421-b89e-6af872d87579" class="">
+</p><figure id="a634fb78-a1dd-46fb-a416-491294ef1aa7" class="image"><a href="Image%20and%20Data%20Processing%20d34f64dbdc654e4dbbc019d6cfe70f71/Untitled%202.png"><img style="width:685px" src="Image%20and%20Data%20Processing%20d34f64dbdc654e4dbbc019d6cfe70f71/Untitled%202.png"/></a></figure><hr id="443ac6b7-616e-46ba-ae6f-29ca5d467296"/><p id="3424216d-cc67-4c89-b17b-bb56ec744916" class="">
+</p><h3 id="4cd76bee-9873-45df-85ca-0eae668ddd32" class="">Dağılım Grafiği</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="a517f1dc-a3b6-430a-90f0-9662a91a6d69" class="code"><code class="language-Python">import matplotlib.pyplot as plt
+import numpy as np
+
+data=np.random.rand(1000)
+
+plt.hist(data,bins=30)
+plt.xlabel(&quot;Değerler&quot;)
+plt.ylabel(&quot;Frekans&quot;)
+plt.title(&quot;Dağılım Grafiği&quot;)
+plt.show()</code></pre><p id="27ab4054-c6cf-41c8-8c77-0677f91b0248" class="">
+</p><figure id="fe786445-4e59-476d-bc58-0dc34d56bbf1" class="image"><a href="Image%20and%20Data%20Processing%20d34f64dbdc654e4dbbc019d6cfe70f71/Untitled%203.png"><img style="width:627px" src="Image%20and%20Data%20Processing%20d34f64dbdc654e4dbbc019d6cfe70f71/Untitled%203.png"/></a></figure><hr id="e3ae2738-3f65-41f8-8951-d3f18e30633a"/><p id="53a7e349-84da-4a15-a360-86394f072d76" class="">
+</p><h3 id="8981862b-918d-4500-a812-1ea6c4b1a506" class="">Sütun Grafiği</h3><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="c87ba40d-6dd9-4bcc-aa84-f989875ee74d" class="code"><code class="language-Python">import matplotlib.pyplot as plt
+
+categories = [&#x27;A&#x27;, &#x27;B&#x27;, &#x27;C&#x27;, &#x27;D&#x27;]
+values = [25, 40, 30, 55]
+
+plt.bar(categories, values)
+plt.xlabel(&#x27;Kategoriler&#x27;)
+plt.ylabel(&#x27;Değerler&#x27;)
+plt.title(&#x27;Sütun Grafiği&#x27;)
+plt.show()</code></pre><p id="fef8d730-8306-472a-91f7-a3c683c1f1fa" class="">
+</p><figure id="1550e33a-14a9-4a80-807d-da869d066f5e" class="image"><a href="Image%20and%20Data%20Processing%20d34f64dbdc654e4dbbc019d6cfe70f71/Untitled%204.png"><img style="width:577px" src="Image%20and%20Data%20Processing%20d34f64dbdc654e4dbbc019d6cfe70f71/Untitled%204.png"/></a></figure><hr id="d703441a-1308-49c3-b6c7-f5f2b1eca326"/><p id="81aba973-0d86-497d-b1cb-abc7fcf25aed" class="">
+</p><h3 id="82ed80bd-7c3a-4cf5-aa99-07c92ce2bb2f" class="">Pasta Grafiği</h3><p id="078b8423-5778-4f3a-a05e-5082debb0c96" class="">
+</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="6b242835-398d-41a0-a8ec-bf368dc6879d" class="code"><code class="language-Python">import matplotlib.pyplot as plt
+
+labels=&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;
+sizes=[15,30,45,10]
+
+plt.pie(sizes,labels=labels,autopct=&#x27;%1.1f%%&#x27;)
+plt.title(&quot;Pasta Grafiği&quot;)
+plt.show()</code></pre><figure id="3ffef1db-2fd1-40e5-9374-554f0f9f975a" class="image"><a href="Image%20and%20Data%20Processing%20d34f64dbdc654e4dbbc019d6cfe70f71/Untitled%205.png"><img style="width:602px" src="Image%20and%20Data%20Processing%20d34f64dbdc654e4dbbc019d6cfe70f71/Untitled%205.png"/></a></figure><p id="d5de9f85-b94e-46e3-a191-0799053c42cf" class="">
+</p><p id="7e895c7e-839c-4d2d-883e-059f64b72999" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
