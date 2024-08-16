@@ -1,0 +1,698 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Design Patterns</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 237, 214, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 237, 214, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(249, 228, 188, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="500c060e-2692-4d63-80d9-c84b9de845e4" class="page sans"><header><img class="page-cover-image" src="Design%20Patterns%20500c060e26924d6380d9c84b9de845e4/designpatterns.png" style="object-position:center 6.110000000000005%"/><h1 class="page-title">Design Patterns</h1><p class="page-description"></p></header><div class="page-body"><p id="8aef0f5c-b4e6-4e75-ae4c-ffed974523fb" class="">Yazılım geliştirme, karmaşık problemleri çözmek için kullanılan güçlü bir araçtır. Ancak bu güç, beraberinde karmaşıklık ve tekrar eden sorunları da getirir. İşte bu noktada <mark class="highlight-red_background"><strong><span style="border-bottom:0.05em solid">design patterns </span></strong></mark> ( Tasarım Desenleri ) imdadımıza yetişir. Design patterns, yazılım tasarımında sıkça karşılaşılan sorunlara önceden belirlenmiş, test edilmiş ve tekrar kullanılabilir çözümler sunar. </p><p id="85beb32b-f89c-46b4-afbb-bddea81828aa" class="">/Bu yazımda, design patterns’lerin ne olduğunu, neden önemli olduklarını, örneklerle birlikte daha derinlemesine inceleyeceğiz ve projelerinizde nasıl kullanabileceğinizi öğreneceksiniz  </p><p id="17770860-5b9b-4965-8125-2d2c87dfc6d8" class=""><strong><span style="border-bottom:0.05em solid">Ad</span></strong>: isim olarak ingilizce kullanılacaktır.<br/><br/><strong><span style="border-bottom:0.05em solid">Sınıf:</span></strong><strong> </strong><mark class="highlight-blue"><strong>yaratımsal</strong></mark>, <mark class="highlight-blue"><strong>yapısal</strong></mark>, <mark class="highlight-blue"><strong>davranışsal</strong></mark><br/><br/><strong><span style="border-bottom:0.05em solid">Amaç:</span></strong> Daha iyi bir şekilde yazılım geliştirmek<br/><br/><strong><span style="border-bottom:0.05em solid">Yapı:</span></strong> <em>OOP </em>üzerinde genellikle kullanılacaktır.<br/><br/><strong><span style="border-bottom:0.05em solid">Sonuçlar:</span></strong> Örnek uygulamalar ile pekiştirmeler yapılacak.</p><p id="6206a00e-d4be-4e0b-bfb5-f272c1dfee07" class="">Desen Sınıfları =&gt; <strong>Yaratımsal,</strong> <strong>Yapısal</strong>, <strong>Davranışsal </strong>olarak 3 sınıfa ayrılır.</p><h2 id="4eff0a0f-7be6-4896-820f-3c5b39847ca5" class=""><mark class="highlight-blue">Yaratımsal Desenler</mark></h2><blockquote id="4c1123c3-401f-40b9-8d74-b8bd2a40ed9f" class="">- İlklendirmenin soyutlaştırılması ( interface, arayüz ),<br/>- Sistem nesnelerinin yaratılmasından bağımsız hale gelmesi<br/>- Sınıf ve nesne desenleri<br/>- Nesnelerin ilklendirilmesi gizli<br/>- Yaratımsal nesneler; Ne, kim, nasıl ve  ne zaman hakkında bilgiler verir.<br/></blockquote><ul id="da42daa7-4acf-496f-97cd-d994765f53e4" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-red_background">Singelton</mark></li></ul><ul id="096d2d86-18e9-4415-9512-d140963b7ae6" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-red_background"><span style="border-bottom:0.05em solid">Abstract </span></mark></li></ul><ul id="1cf4f7ba-b09a-4c5c-a873-4cf8c872ef9a" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-red_background"><span style="border-bottom:0.05em solid">Factory</span></mark><mark class="highlight-red_background">, </mark></li></ul><ul id="36eb796a-2b57-4e6c-b621-6b99b1fc8bef" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-red_background">Builder, </mark></li></ul><ul id="b2ba8d24-6e84-427a-9332-3462d6293e89" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-red_background">Factory </mark></li></ul><ul id="804d8f16-596e-48b0-b120-64e4b10f99bb" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-red_background">Method, </mark></li></ul><ul id="2cd40a89-6c16-4b5f-bed2-422626f50520" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-red_background">Prototype</mark></li></ul><h2 id="fd97b854-5222-455a-ba7e-814edab8c7c8" class=""><mark class="highlight-blue">Yapısal Desenler  </mark></h2><blockquote id="e1f8074f-8cd0-4cca-b711-5062d9860fb0" class="">Sınıf ve nesneler  ile daha büyük yapıların oluşturulmasına odaklanır.</blockquote><blockquote id="78e70c21-19d1-4cec-b172-2168df246de5" class=""> Kalıtım (inheritance) yerine bileşim (composition) tercih eder.</blockquote><ul id="73ee2df9-e615-4c77-b8c0-1ddcd8a0e1d2" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background"><span style="border-bottom:0.05em solid">Adapter</span></mark><mark class="highlight-yellow_background">, </mark></li></ul><ul id="8061203d-4e2a-4092-abf4-93e370bef726" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background"><span style="border-bottom:0.05em solid">Bridge</span></mark><mark class="highlight-yellow_background">,</mark></li></ul><ul id="2cb65f2b-e17f-43cd-9538-882d6ecda18b" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background"><span style="border-bottom:0.05em solid">Composite,</span></mark><mark class="highlight-yellow_background"> </mark></li></ul><ul id="26c9e7ad-56a7-455b-8341-988964a30dab" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background"><span style="border-bottom:0.05em solid">Decorator</span></mark><mark class="highlight-yellow_background">,</mark></li></ul><ul id="d0f1bc09-4483-4195-ab7b-f3af1cef5113" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background"><span style="border-bottom:0.05em solid">Fecade,</span></mark><mark class="highlight-yellow_background"> </mark></li></ul><ul id="6f3336ba-1d39-48b3-9c5f-3fd7623a4c8a" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background"><span style="border-bottom:0.05em solid">Flyweight</span></mark><mark class="highlight-yellow_background">, </mark></li></ul><ul id="48546816-dcf9-400b-8df0-b350c3e2156c" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background"><span style="border-bottom:0.05em solid">Proxy</span></mark></li></ul><h2 id="3d1ea2b7-fdee-4eae-9890-b5480e4629bf" class=""><mark class="highlight-blue">Davranışsal Desenler</mark></h2><blockquote id="6dfd652d-e344-4807-ba5e-d85445336329" class="">Algoritmaların ve nesneler arası sorumlulukların atanması ile ilgilidir.</blockquote><ul id="ef02bdd2-1ffe-4d7c-a323-30a640123823" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-pink_background">Chain of Responsibility</mark></li></ul><ul id="92bc76a9-f6ee-4e08-b36b-b253bc29ca99" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-pink_background">Command</mark></li></ul><ul id="e6727e68-40ec-471f-8203-6fbc4fb617c2" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-pink_background">Interpreter</mark></li></ul><ul id="fa0fa483-62a7-43d2-9248-9a62472d4fed" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-pink_background">Iterator</mark></li></ul><ul id="1cd931d1-f02f-4a50-b10a-992ae7895d98" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-pink_background">Mediator </mark></li></ul><ul id="63b5a88a-cfd6-4927-8833-04ab013149a2" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-pink_background">Memento</mark></li></ul><ul id="f6a12065-0a41-4a64-90f3-2e65839d77dc" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-pink_background">Observer</mark></li></ul><ul id="3646579b-9a8e-4ea3-a37a-958bb31436e2" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-pink_background">State</mark></li></ul><ul id="a3942a77-21ca-4ed2-bc58-27812532a8e1" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-pink_background">Strategy</mark></li></ul><ul id="c4e5ddfe-87a5-4182-b43d-4ee05af9eb1a" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-pink_background">Template</mark></li></ul><ul id="c07934a6-066e-4e0c-aa9c-f0a74b67376c" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-pink_background">Visitor</mark></li></ul><hr id="613963e0-9047-45de-ace6-7087698de5c2"/><hr id="f79ae83d-dd33-4678-b8f0-5837cb8bfb15"/><h3 id="7555c96d-8fd2-4cdb-9ca8-7e8ede6fb49b" class="">Iterator Design Pattern</h3><p id="2bb49c46-9597-457b-b4fa-10559dad84c7" class="">Iterator: Yineleyici, tekrarlayıcı</p><p id="00c6d963-6335-4cd1-a4d2-956232211f2b" class="">Bilinen diğer adı <strong><span style="border-bottom:0.05em solid">Cursor</span></strong>; <span style="border-bottom:0.05em solid">imleç</span></p><p id="63e8e133-5317-41a7-8bb0-a8221ecc2518" class=""><strong><span style="border-bottom:0.05em solid">Amaç:</span></strong> Koleksiyonun alt yapısını teşhir etmeden elemanlarına sıralı erişim sağlamak</p><ul id="1e92631b-1648-430f-b407-01808aeea5fc" class="bulleted-list"><li style="list-style-type:disc">Koleksiyonlarda farklı şekilde gezinmek mümkündür.</li></ul><ul id="52859ad8-aa78-46e0-ba9a-508218f343d3" class="bulleted-list"><li style="list-style-type:disc">Koleksiyona erişim ve gezinme sorumluluğu koleksiyondan <em><span style="border-bottom:0.05em solid">iterartor</span></em>’a geçiyor.</li></ul><ul id="7cec8406-e37d-4a99-b386-e37db1d24df3" class="bulleted-list"><li style="list-style-type:disc"><strong>Nesne davranışsal</strong> bir tasarım desenidir.</li></ul><ul id="2ac7b235-0e71-4621-b867-89203b0183af" class="bulleted-list"><li style="list-style-type:disc">Aşağıda bir Iterator design patterns UML diyagramı verilmiştir.</li></ul><p id="e0ee5cfc-8863-4344-9de5-f2521455dc0c" class="">Bu UML sınıf diyagramı, <strong>Iterator</strong> tasarım desenini göstermektedir.</p><figure id="aa9d9cb6-b938-4c8b-8df2-145c8fd11d9c" class="image"><a href="https://github.com/1omerozturk/Design-Patterns/blob/main/images/iterator.gif?raw=true"><img src="https://github.com/1omerozturk/Design-Patterns/blob/main/images/iterator.gif?raw=true"/></a></figure><p id="5a06686d-197b-4059-b6aa-f67ef688f88e" class="">Desenin ana bileşenleri şunlardır:</p><ol type="1" id="56dfd823-ca98-462a-9b11-ec2fbe12b211" class="numbered-list" start="1"><li><strong>Iterator (Gezgin) Arayüzü</strong>:<ul id="291104ad-c407-49b0-8947-c31508996c63" class="bulleted-list"><li style="list-style-type:disc"><code>first()</code>: Koleksiyondaki ilk öğeyi döndürür.</li></ul><ul id="950c384f-8604-46bc-8893-c5617361a25b" class="bulleted-list"><li style="list-style-type:disc"><code>next()</code>: Koleksiyondaki bir sonraki öğeyi döndürür.</li></ul><ul id="8ab3e133-31ec-487e-a80d-0ce2e3effb6b" class="bulleted-list"><li style="list-style-type:disc"><code>isDone()</code>: Koleksiyonun sonuna gelinip gelinmediğini kontrol eder.</li></ul><ul id="24a953bc-ca35-44ad-b984-934a6d1ad81c" class="bulleted-list"><li style="list-style-type:disc"><code>currentItem()</code>: Geçerli öğeyi döndürür.</li></ul></li></ol><ol type="1" id="e9da3be5-1482-4666-acca-cfb18c3ac00e" class="numbered-list" start="2"><li><strong>ConcreteIterator (Somut Gezgin)</strong>:<ul id="c7903d4b-6e45-42bd-9d85-c1528eda8037" class="bulleted-list"><li style="list-style-type:disc">Bu sınıf, <code>Iterator</code> arayüzünü uygular ve koleksiyon üzerinde gezmeyi sağlayan yöntemlerin somut implementasyonlarını içerir.</li></ul><ul id="b4fcbee4-c443-419c-89ff-a534f204e7b2" class="bulleted-list"><li style="list-style-type:disc"><code>ConcreteIterator</code>, koleksiyondaki geçerli pozisyonu izlemek için genellikle bir indeks kullanır ve <code>Iterator</code> arayüzündeki yöntemleri bu indeks yardımıyla uygular.</li></ul></li></ol><ol type="1" id="54912bf1-89c8-45cb-a258-afcad1e5c930" class="numbered-list" start="3"><li><strong>Aggregate (Toplayıcı) Arayüzü</strong>:<ul id="0bee6a58-7192-4c63-9232-77374d7d2a87" class="bulleted-list"><li style="list-style-type:disc"><code>createIterator()</code>: Koleksiyon üzerinde iterasyon yapmayı sağlayacak bir <code>Iterator</code> nesnesi oluşturur.</li></ul></li></ol><ol type="1" id="d6decfdb-8909-4afa-baea-5923b37d2838" class="numbered-list" start="4"><li><strong>ConcreteAggregate (Somut Toplayıcı)</strong>:<ul id="4e538b1e-5c5f-45e3-ba15-732de95f01da" class="bulleted-list"><li style="list-style-type:disc">Bu sınıf, <code>Aggregate</code> arayüzünü uygular ve belirli bir koleksiyonun yönetimini yapar.</li></ul><ul id="b520b839-22c0-4a55-9c18-4e9744fd4d13" class="bulleted-list"><li style="list-style-type:disc"><code>ConcreteAggregate</code>, <code>createIterator()</code> yöntemini kullanarak kendisine ait bir <code>ConcreteIterator</code> oluşturur.</li></ul></li></ol><ol type="1" id="11f406d7-dc4d-4e50-983b-46bc51ed911f" class="numbered-list" start="5"><li><strong>Client (Müşteri)</strong>:<ul id="3ac7edc3-f323-4639-bbe1-73f470d8ce91" class="bulleted-list"><li style="list-style-type:disc"><code>Iterator</code> ve <code>Aggregate</code> nesnelerini kullanarak koleksiyonlar üzerinde iterasyon yapar.</li></ul></li></ol><p id="69b7b9de-e9b1-46f0-a1d1-758ff4a02c9c" class="">Bu desenin genel amacı, farklı türde koleksiyonlar arasında gezinmeyi bir ara yüzle soyutlamaktır. Bu sayede, koleksiyonun iç yapısına bağımlı olmadan öğeler arasında dolaşmak mümkün hale gelir.</p><p id="e429d955-7ddb-4351-bc93-837b5418df8a" class="">
+</p><p id="8ec11a06-debe-4f91-8746-94a2de334cc6" class=""><span style="border-bottom:0.05em solid">Günlük hayattan bir örnek vermek gerekirse 🪢</span></p><ul id="7ccbb5b9-bfe6-4070-8f8f-c652b6e09953" class="bulleted-list"><li style="list-style-type:disc">Bir kütüphanedeki kitap raflarını düşünün. <code>ConcreteAggregate</code>, bu kitap raflarını temsil ederken, <code>ConcreteIterator</code> ise bu raflardaki kitaplar arasında gezinmenizi sağlar. <code>Client</code>, belirli bir rafın kitapları arasında gezinmek istediğinde <code>Iterator</code> ara yüzünü kullanarak bu işlemi gerçekleştirir.</li></ul><p id="503ea5c2-bba6-4ea8-96ff-158b4329b351" class="">Bu örnek, Iterator deseninin koleksiyonlar arasında gezinti yapmayı nasıl soyutladığını ve uygulamayı nasıl kolaylaştırdığını gösterir.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="63cfbc80-8f82-44dc-bc86-12c54597ebeb"><div style="font-size:1.5em"><span class="icon">🔑</span></div><div style="width:100%">Iterator design pattern örneğine <mark class="highlight-default">aşağıdaki</mark><mark class="highlight-blue"> </mark><mark class="highlight-blue"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Iterator">linkten</a></strong></mark><mark class="highlight-default"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Iterator"> </a></strong></mark><mark class="highlight-default">ulaşabilirsiniz:</mark></div></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="686591df-9550-4323-882c-4c365180a52a" class="code"><code class="language-Shell">https://github.com/1omerozturk/Design-Patterns/tree/main/Iterator</code></pre><figure id="3495098d-e759-487c-9e26-6149d66bccb8"><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Iterator" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Design-Patterns/Iterator at main · 1omerozturk/Design-Patterns</div><div class="bookmark-description">Contribute to 1omerozturk/Design-Patterns development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/1omerozturk/Design-Patterns/tree/main/Iterator</div></div><img src="https://opengraph.githubassets.com/073f336edee83905fc90254c8ea49d8f9641ee027609b1c80160130bafe4a541/1omerozturk/Design-Patterns" class="bookmark-image"/></a></figure><hr id="a680c43c-d3d1-4d61-a621-e2918a25a7d1"/><hr id="cf502335-c89f-4d93-b278-3cbdfb16d54d"/><h3 id="b9823b25-fa19-4cb6-8759-12f8d0aa9f7c" class="">Composite Design Pattern</h3><ul id="27e253c7-ade4-4d5b-ba21-974f1f1e2b3f" class="bulleted-list"><li style="list-style-type:disc"><strong>Composite</strong>: Bileşim, birçok parçadan oluşan demektir.</li></ul><ul id="dc003936-5263-48b1-9b62-534359c4bc96" class="bulleted-list"><li style="list-style-type:disc">Bu desen, nesneleri ağaç yapısında birleştirerek, bir bütünün parçalarını tek bir nesne gibi ele almayı sağlar. Böylece, istemci kodunun bu parçaların ayrı ayrı mı yoksa bir bütün mü olduğu konusunda endişelenmesine gerek kalmaz. </li></ul><ul id="2fbf591a-f2b5-4a29-bad3-7a6a7d218e70" class="bulleted-list"><li style="list-style-type:disc">özellikle hiyerarşik yapılarda; dosya sistemleri, organizasyon şemaları gibi, tekrar eden işlemlerde esneklik sağlar ve mevcut hiyerarşiyi değiştirmek kolaylaşır. </li></ul><p id="37383c30-31b2-4788-8e5d-9071ac7fd216" class=""><strong><span style="border-bottom:0.05em solid">Amaç:</span></strong> Bütüne ve bütünün parçalarına aynı şekilde erişim sağlamak.</p><ul id="287b550c-65a4-4e56-a781-29a746d37759" class="bulleted-list"><li style="list-style-type:disc">Nesne yapısaldır.</li></ul><ul id="68abe5fd-0053-4982-b379-e559ac6cb8d8" class="bulleted-list"><li style="list-style-type:disc">Pencere<ul id="bbf81fb1-8c29-42c7-981b-6bf81628cbf3" class="bulleted-list"><li style="list-style-type:circle">Etiket</li></ul><ul id="4a147a7e-207a-4ddd-904a-5780199663ee" class="bulleted-list"><li style="list-style-type:circle">Metin satırı</li></ul><ul id="87eb7894-3c7d-4cfa-84c1-0d9e4ecabe96" class="bulleted-list"><li style="list-style-type:circle">Açılır menü<ul id="ea908644-a8f9-4dd7-a3a6-c34ccbdf6d6e" class="bulleted-list"><li style="list-style-type:square">Düğme</li></ul><ul id="4385faee-16e2-4544-bd96-767b0189f413" class="bulleted-list"><li style="list-style-type:square">Metin satırı</li></ul></li></ul></li></ul><p id="53be88a0-4ae1-438b-9b1a-c8f240c994f5" class="">Bileşim içerisindeki tüm nesnelere aynı şekilde davranma.</p><p id="36671aa0-6dae-4f4c-aa75-5188839bcc69" class="">
+</p><p id="191a1e74-3e71-4dcc-aee3-249a4cc8e4e8" class=""><strong>Composite </strong>( Bileşim ) tasarım deseni UML diyagramı.</p><figure id="3e4e2c29-11e2-4de0-b002-b032128d4274" class="image"><a href="https://github.com/1omerozturk/Design-Patterns/blob/main/images/composite.jpg?raw=true"><img src="https://github.com/1omerozturk/Design-Patterns/blob/main/images/composite.jpg?raw=true"/></a></figure><p id="7bea205a-6a1d-4830-9a12-e87dc7ff6434" class="">Desenin ana bileşenleri şunlardır:</p><ol type="1" id="05ad491d-69af-44e1-a2bc-c2f9141ca1bb" class="numbered-list" start="1"><li><strong>Component (Bileşen) Arayüzü</strong>:<ul id="587d0b49-06a7-4f47-b240-0f8c2c6c774d" class="bulleted-list"><li style="list-style-type:disc"><code>operation()</code>: Hem yaprak (leaf) hem de bileşik (composite) nesnelerde gerçekleştirilmesi gereken bir işlemi tanımlar.</li></ul></li></ol><ol type="1" id="76277f35-4d4e-410c-bce4-da1ca93b44ba" class="numbered-list" start="2"><li><strong>Leaf (Yaprak)</strong>:<ul id="41dcc993-3434-49cb-8101-5000f748a07a" class="bulleted-list"><li style="list-style-type:disc">Bu sınıf, ağaç yapısının son düğümlerini temsil eder ve <code>Component</code> ara yüzünü uygular.</li></ul><ul id="5060bdfd-e7d8-4804-816d-eba4315b427d" class="bulleted-list"><li style="list-style-type:disc">Yaprak düğümler, daha fazla alt düğüm içermez.</li></ul></li></ol><ol type="1" id="a1d126b2-db22-441e-8e17-abad15f8cae0" class="numbered-list" start="3"><li><strong>Composite (Bileşik)</strong>:<ul id="09846b1f-5860-45ae-a808-cc21992a878f" class="bulleted-list"><li style="list-style-type:disc">Bu sınıf, alt düğümlere (bileşenlere) sahip olan düğümleri temsil eder ve <code>Component</code> arayüzünü uygular.</li></ul><ul id="cc496482-4c22-47fb-bf45-ca6edd8985d8" class="bulleted-list"><li style="list-style-type:disc">Bileşik nesneler, hem yaprak hem de başka bileşik nesneleri içerebilir.</li></ul><ul id="d4316b86-5e4b-4780-aa1a-b9ed500619f8" class="bulleted-list"><li style="list-style-type:disc"><code>operation()</code> yöntemi, tüm alt bileşenler üzerinde <code>operation()</code> yöntemini çağırır.</li></ul></li></ol><ol type="1" id="b52c7860-30c1-4b91-a67b-3f1333bf02a6" class="numbered-list" start="4"><li><strong>Client (Müşteri)</strong>:<ul id="e01f3182-740d-48c7-ab7e-52649400c458" class="bulleted-list"><li style="list-style-type:disc"><code>Component</code> arayüzünü kullanarak yaprak ve bileşik nesnelerle etkileşime girer.</li></ul></li></ol><p id="bb9c7f09-6012-425f-9062-31fcc86189da" class="">
+</p><p id="149cef2b-953a-45db-b0b1-d9f679cb74a6" class="">Diyagramdaki iki ayrı bölüm bu yapıyı daha net anlamamızı sağlıyor:</p><ul id="6b46fb25-cb1f-4bec-a717-37d7c15182d7" class="bulleted-list"><li style="list-style-type:disc"><strong>Sol Taraftaki Sınıf Diyagramı</strong>: Bu bölümde <code>Component</code>, <code>Leaf</code> ve <code>Composite</code> arasındaki ilişkiler ve <code>operation()</code> yönteminin nasıl tanımlandığı gösterilmektedir. Composite sınıfı, kendi çocuk bileşenlerini tutar ve <code>operation()</code> yöntemini her bir çocuk bileşen için çağırır.</li></ul><ul id="e0f096f5-981c-419b-ab9c-9c5bc32a25e5" class="bulleted-list"><li style="list-style-type:disc"><strong>Sağ Taraftaki Nesne İşbirliği Diyagramı</strong>: Bu bölümde ise bir müşteri nesnesinin bir bileşik nesneye (<code>composite1</code>) eriştiği ve bu bileşik nesnenin alt bileşenlere (<code>leaf1</code>, <code>leaf2</code>, <code>composite2</code> gibi) nasıl erişim sağladığı gösterilmektedir. Bu yapı, bileşik nesnelerin alt bileşenleri üzerinde operasyonlar gerçekleştirebilmesi için kullanılır.</li></ul><p id="3fb693a4-fd85-4608-b905-8541ab0737fe" class="">
+</p><p id="9209d745-d8d9-4ae5-88b8-a42157dfbbe5" class=""><span style="border-bottom:0.05em solid">Deseni daha iyi anlamak için günlük hayattan örnek vermek gerekirse 🪢</span></p><ul id="1ddbb81e-9183-47b8-ad1d-3aecd255d9f5" class="bulleted-list"><li style="list-style-type:disc">Bir şirketin organizasyon yapısını düşünün. <code>Component</code> arayüzü, her seviyedeki çalışanın gerçekleştirmesi gereken ortak operasyonları tanımlar (örneğin, rapor hazırlamak).</li></ul><ul id="6bd2cd81-d6f8-4dee-a5b5-2d5e1683a2b9" class="bulleted-list"><li style="list-style-type:disc"><code>Leaf</code>, bireysel çalışanları (yaprak düğümleri) temsil eder.</li></ul><ul id="a25a623c-d5fe-4058-a530-4bb8fae7ec0c" class="bulleted-list"><li style="list-style-type:disc"><code>Composite</code>, departmanları veya takımları (bileşik düğümleri) temsil eder.</li></ul><ul id="7e68fa50-d403-4a11-9823-0d574a376067" class="bulleted-list"><li style="list-style-type:disc"><code>Client</code>, şirketin CEO&#x27;su veya yöneticisi olabilir ve bu kişi, departmanların veya bireysel çalışanların operasyonlarını başlatabilir.</li></ul><p id="2691b5f4-f1ea-4d2c-bffe-c9388f2f7e16" class="">Bu desen, <span style="border-bottom:0.05em solid">hiyerarşik yapıları yönetmeyi kolaylaştırır</span> ve bireysel nesneler ile birleşik nesneler üzerinde aynı şekilde işlem yapma esnekliği sağlar.</p><ul id="a40ae677-0530-4967-9e2a-b278d35ea7f8" class="bulleted-list"><li style="list-style-type:disc">Composite design pattern <em>ebeveyn referansları,</em> <em>ortak yöntemler</em>, <span style="border-bottom:0.05em solid">command</span> deseni ile birlikte <span style="border-bottom:0.05em solid">MacroCommand</span> elde edilebilir.</li></ul><ul id="7dde68e7-952a-415c-b2b4-dddc4384b4de" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid">Decorator </span>ile birlikte sıkça kullanılır.</li></ul><ul id="4240ede0-9949-4f1d-ad9e-03f78b1faeec" class="bulleted-list"><li style="list-style-type:disc"><em><span style="border-bottom:0.05em solid">Iterator </span></em>ile composite sınıflar gezilebilir.</li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1e20cbec-48f8-4d6c-9db5-c62c66a5692f"><div style="font-size:1.5em"><span class="icon">🔑</span></div><div style="width:100%">Composite design pattern örneğine <mark class="highlight-default">aşağıdaki</mark><mark class="highlight-blue"> </mark><mark class="highlight-blue"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Iterator">linkten</a></strong></mark><mark class="highlight-default"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Iterator"> </a></strong></mark><mark class="highlight-default">ulaşabilirsiniz:</mark></div></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="8cac9935-3192-470e-9f86-fc744ed205ae" class="code"><code class="language-Shell">https://github.com/1omerozturk/Design-Patterns/tree/main/Composite</code></pre><figure id="dd03568e-2217-4f2e-8f21-b0d01307cc80"><a href="https://github.com/1omerozturk/Design-Patterns/blob/main/Composite/" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Design-Patterns/Composite at main · 1omerozturk/Design-Patterns</div><div class="bookmark-description">Contribute to 1omerozturk/Design-Patterns development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/1omerozturk/Design-Patterns/blob/main/Composite/</div></div><img src="https://opengraph.githubassets.com/20f904661f5655b0a293f1aa442ebd783ec7061ae6b2be9eb2f3d05991646090/1omerozturk/Design-Patterns" class="bookmark-image"/></a></figure><hr id="c10bf221-f7d3-496a-9089-7ded333a8a9f"/><hr id="45d0ab1c-057c-418e-89a2-d26492290abb"/><h3 id="67204d65-2617-4068-95c6-a4144b0e182c" class="">Command Design Pattern</h3><ul id="2f593ab2-db5f-4cad-8319-b9e3123b259e" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Command</span></strong>: Komut, emir anlamlarına gelir.</li></ul><ul id="41a75f70-80fe-4fbf-a10c-c5e648911163" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid">Action </span>(eylem ), <span style="border-bottom:0.05em solid">Transaction</span> (işlem) diğer bilinen adlarıdır.</li></ul><ul id="de223a11-185b-4086-a049-36c72d413b41" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Amaç</span></strong>: Bir isteği ya da komutu, nesne olarak tanımlamak.</li></ul><ul id="ebcfdcbc-f4e6-471d-a754-c26ca0e73aa3" class="bulleted-list"><li style="list-style-type:disc">İstek nesnesidir.</li></ul><ul id="a48abae1-0c15-4cf9-bb36-ef39f8374888" class="bulleted-list"><li style="list-style-type:disc">Nesne davranışsaldır. </li></ul><p id="55456291-67d5-4cfb-a629-50cb87c6189c" class="">
+</p><p id="0c6744d3-9055-4d40-8393-4827f4838af3" class="">UML diyagramı verilen <span style="border-bottom:0.05em solid">Command Design Pattern</span>:</p><figure id="5bc5efdd-bfa5-4eaa-bce8-a6628cf4bfb0" class="image"><a href="https://github.com/1omerozturk/Design-Patterns/blob/main/images/cmmndgif.gif?raw=true"><img src="https://github.com/1omerozturk/Design-Patterns/blob/main/images/cmmndgif.gif?raw=true"/></a></figure><p id="cd0b786d-33b0-4871-b8f9-10ec298c32d2" class="">Bu UML diyagramı, <strong>Command</strong> (Komut) tasarım desenini,  bir işlemi (komutu) nesne olarak temsil etmeyi sağlar. Bu desen, işlemleri parametrik hale getirir ve işlemler arasında geri al (<em><span style="border-bottom:0.05em solid">undo</span></em>) ve yeniden yap (<em><span style="border-bottom:0.05em solid">redo</span></em>) gibi işlemleri desteklemeyi kolaylaştırır. </p><p id="917462a1-5fc2-452d-b86a-2021ec65f35d" class="">Command deseninin ana bileşenleri şunlardır:</p><ol type="1" id="f31e1ae3-2cc1-4614-bddb-7aadb16b2e35" class="numbered-list" start="1"><li><strong>Command Arayüzü</strong>:<ul id="112a00ad-06ad-4029-b8df-be1f73181f07" class="bulleted-list"><li style="list-style-type:disc"><code>Execute()</code>: Bir komutu çalıştırmak için kullanılan yöntemdir. Bu ara yüz, tüm komutların uygulaması gereken ortak bir yöntemi tanımlar.</li></ul></li></ol><ol type="1" id="9c691d19-6b63-4ea2-8543-15a8e06d6240" class="numbered-list" start="2"><li><strong>ConcreteCommand (Somut Komut)</strong>:<ul id="c3808781-a24e-4258-9594-9577d39c647a" class="bulleted-list"><li style="list-style-type:disc"><code>Command</code> arayüzünü uygular ve belirli bir işlemi gerçekleştirir.</li></ul><ul id="caffc4ae-93ee-40c9-9b51-88608114538d" class="bulleted-list"><li style="list-style-type:disc">Bu sınıf, işlemi gerçekleştirmek için gerekli olan durumu ve alıcı (<em><span style="border-bottom:0.05em solid">receiver</span></em>) nesnesini içerir.</li></ul><ul id="730cd3f3-1634-4c15-9c7d-5ae0d92ce19d" class="bulleted-list"><li style="list-style-type:disc"><code>Execute()</code> yöntemi, alıcı nesnede (<em><span style="border-bottom:0.05em solid">receiver</span></em>) tanımlı olan belirli bir işlemi çağırır.</li></ul></li></ol><ol type="1" id="d7c330c7-eeca-477d-82e8-54aacd0cdd06" class="numbered-list" start="3"><li><strong>Receiver (Alıcı)</strong>:<ul id="79459943-a5b0-4b8a-ab6c-306fab0d5c14" class="bulleted-list"><li style="list-style-type:disc">Gerçek iş mantığını içeren sınıftır. Bu sınıf, komut tarafından çağrılan işlemleri gerçekleştirir.</li></ul><ul id="516f2077-7595-482b-a085-eaf90831011a" class="bulleted-list"><li style="list-style-type:disc"><code>Action()</code>: Alıcının gerçekleştirdiği işlemdir.</li></ul></li></ol><ol type="1" id="3834ff1a-9d78-4d19-bbfd-55b57df064c4" class="numbered-list" start="4"><li><strong>Invoker (Çağırıcı)</strong>:<ul id="2ffdfeab-35e0-485a-8a02-ca015a712629" class="bulleted-list"><li style="list-style-type:disc">Komutun ne zaman çalıştırılacağını belirler. Komutun çalıştırılmasından sorumludur.</li></ul><ul id="396510d1-3aaa-468a-8c24-a46e05ac8b86" class="bulleted-list"><li style="list-style-type:disc">Çağırıcı, komut nesnesini tutar ve <code>Execute()</code> yöntemini çağırarak komutun çalışmasını sağlar.</li></ul></li></ol><ol type="1" id="43333a68-3982-4d80-a420-9a653f0b6e64" class="numbered-list" start="5"><li><strong>Client (Müşteri)</strong>:<ul id="db1bc82f-d00d-4f54-aa0a-a4e881ee6a76" class="bulleted-list"><li style="list-style-type:disc">Komut nesnelerini oluşturur ve gerekli parametrelerle ayarlar.</li></ul><ul id="3c2410bc-c5c1-46db-845e-ff881310786e" class="bulleted-list"><li style="list-style-type:disc">Müşteri, komut nesnelerini oluşturur ve çağırıcıya iletir.</li></ul></li></ol><p id="ac34ca6f-d717-44b0-b354-2e95ca24a707" class="">Diyagramın detayları:</p><ul id="c1f7202f-eb26-471f-87af-68f84d55eb75" class="bulleted-list"><li style="list-style-type:disc"><strong>Client</strong>, belirli bir <code>ConcreteCommand</code> oluşturur ve bu komutu <code>Invoker</code>&#x27;a iletir.</li></ul><ul id="7ecb9e7c-9f43-44af-bac0-ab5df98207f3" class="bulleted-list"><li style="list-style-type:disc"><strong>Invoker</strong>, kendisine iletilen komutu (<code>Command</code>) çalıştırmaktan sorumludur ve <code>Execute()</code> yöntemini çağırır.</li></ul><ul id="58e29b05-9ff0-4680-acb1-9660b569f6d9" class="bulleted-list"><li style="list-style-type:disc"><strong>ConcreteCommand</strong>, komutu çalıştırdığında <code>Receiver</code> nesnesinin <code>Action()</code> yöntemini çağırır.</li></ul><ul id="7a6310b3-6c41-4635-bf49-66fd4304ded6" class="bulleted-list"><li style="list-style-type:disc"><strong>Receiver</strong>, asıl iş mantığını içerir ve <code>Action()</code> yöntemi ile belirli bir işlemi gerçekleştirir.</li></ul><p id="cd28128d-4353-4530-8571-8534e24273f8" class="">
+</p><p id="45485240-d140-4f0b-8095-db02508e3b63" class=""><span style="border-bottom:0.05em solid">Günlük hayattan bir örnek vermek gerekirse: 🪢</span></p><ul id="8672a01d-0445-4e27-9ae5-85458691b0b4" class="bulleted-list"><li style="list-style-type:disc">Bir televizyon kumandasını düşünün.<ul id="48e81393-eb9b-4008-8fdf-a58759f82c1e" class="bulleted-list"><li style="list-style-type:circle"><strong>Command Arayüzü</strong>, tüm komutların (örneğin, televizyonu açma, kapama, ses seviyesini artırma) uygulaması gereken ortak bir ara yüzdür.</li></ul><ul id="f866a8f0-a01d-4c53-a535-d0fc7230c898" class="bulleted-list"><li style="list-style-type:circle"><strong>ConcreteCommand</strong>, belirli bir komutun (örneğin, televizyonu açma) uygulamasıdır.</li></ul><ul id="bdfcf351-6529-4d3c-b4f1-c221809aa882" class="bulleted-list"><li style="list-style-type:circle"><strong>Receiver</strong>, televizyonun kendisidir ve belirli işlemleri (örneğin, televizyonu açma) gerçekleştirir.</li></ul><ul id="68499c9e-930d-4b99-b517-e83d67b9ce26" class="bulleted-list"><li style="list-style-type:circle"><strong>Invoker</strong>, kumandanın kendisidir ve hangi butona basıldığında hangi komutun çalıştırılacağını belirler.</li></ul><ul id="4f097430-176a-4eaf-acbf-cda2cd917a8e" class="bulleted-list"><li style="list-style-type:circle"><strong>Client</strong>, kumandayı programlayan ve hangi butonun hangi komutu çalıştıracağını belirleyen kişidir.</li></ul></li></ul><p id="f6e8817b-3131-4a73-9b9d-d032166a1d90" class="">Bu desen, işlemleri soyutlamak ve komutları parametrik hale getirmek için kullanılır. Özellikle <span style="border-bottom:0.05em solid">geri al</span> ve <span style="border-bottom:0.05em solid">yeniden yap</span> işlemlerinin gerektiği durumlarda çok kullanışlıdır.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="2bf8ad79-6d20-4b06-b509-e2eca329d29d"><div style="font-size:1.5em"><span class="icon">🔑</span></div><div style="width:100%">Command design pattern örneğine <mark class="highlight-default">aşağıdaki</mark><mark class="highlight-blue"> </mark><mark class="highlight-blue"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Command">linkten</a></strong></mark><mark class="highlight-default"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Iterator"> </a></strong></mark><mark class="highlight-default">ulaşabilirsiniz:</mark></div></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="cae3b41d-545e-49b3-8925-8f15126ae29f" class="code"><code class="language-Shell">https://github.com/1omerozturk/Design-Patterns/tree/main/Command</code></pre><figure id="b17ac2b7-12aa-452c-ae68-0ad353eef437"><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Command" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Design-Patterns/Command at main · 1omerozturk/Design-Patterns</div><div class="bookmark-description">Contribute to 1omerozturk/Design-Patterns development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/1omerozturk/Design-Patterns/tree/main/Command</div></div><img src="https://opengraph.githubassets.com/8031d28a8a5f1bc20ef51d7d65e9782afc447c48b0b314867ecfc6623e6b7040/1omerozturk/Design-Patterns" class="bookmark-image"/></a></figure><hr id="337cd66d-fef9-4d33-9950-851e627e3114"/><hr id="f0b78564-8fc5-42b1-90c8-bb591fd7a311"/><p id="0d030884-9859-45c8-8d6c-ea61eab50a7e" class="">
+</p><h3 id="e3200a8f-3005-4493-a369-49f8bd95db69" class="">State Design Pattern</h3><ul id="af5fe436-dd4f-4014-8433-a9b1f50b04b3" class="bulleted-list"><li style="list-style-type:disc">State: Durum, hal anlamlarına gelmektedir.</li></ul><ul id="78015424-6ea2-4e2f-b204-4d17b3ad2852" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Amaç:</span></strong> Bir <span style="border-bottom:0.05em solid">nesnenin</span> iç durumu değişince davranışının da değişmesinin sağlamak.</li></ul><ul id="17a8d433-f0de-457a-91f6-039693897c9f" class="bulleted-list"><li style="list-style-type:disc">Nesne davranışsaldır.</li></ul><ul id="9e1c731c-c85a-4938-9e0f-6df75f83acdf" class="bulleted-list"><li style="list-style-type:disc">If-else if yapısı örnek olabilir. </li></ul><ul id="47ca6dc1-9824-48a7-a4ca-279cec2ef10a" class="bulleted-list"><li style="list-style-type:disc">Çok fazla durumun kontrol edilmesi zorlaşabilir bundan dolayı Finite State Machines, ( Sonlu durum makineleri ) kullanılır.</li></ul><figure id="ffc6973c-85c6-4563-b698-72f4067e1925" class="image"><a href="https://www.allaboutcircuits.com/uploads/articles/state-diagram-circuit.jpg"><img src="https://www.allaboutcircuits.com/uploads/articles/state-diagram-circuit.jpg"/></a></figure><p id="afa3448c-ad82-474d-ad2d-10c73f3ab2e3" class=""><strong>State Design Pattern UML Diyagramı:</strong></p><figure id="b06bfbe0-6c88-40be-9b24-fbc2f775a68f" class="image"><a href="https://github.com/1omerozturk/Design-Patterns/blob/main/images/state.jpg?raw=true"><img src="https://github.com/1omerozturk/Design-Patterns/blob/main/images/state.jpg?raw=true"/></a></figure><p id="c712f438-7721-4605-82cb-a71a7a5e4084" class="">Bu UML diyagramı, <strong>State</strong> (Durum) tasarım desenini göstermektedir. State deseni, bir nesnenin iç durumuna göre davranışını değiştirmesine olanak tanır. Bu desen, nesnenin durumlarını ve bu durumlara göre nasıl davrandığını soyutlar. State deseninin ana bileşenleri şunlardır:</p><ol type="1" id="0968aad3-c84a-47a5-934b-b96d8fb73323" class="numbered-list" start="1"><li><strong>State (Durum) Arayüzü</strong>:<ul id="6cdfd711-2286-4afd-b7ae-1a3331e6a9a4" class="bulleted-list"><li style="list-style-type:disc"><code>handle()</code>: Durum tarafından gerçekleştirilecek bir işlemi tanımlar. Bu yöntem, her bir somut durum (concrete state) tarafından farklı şekilde uygulanır.</li></ul></li></ol><ol type="1" id="f0d51b4c-bf2b-4b17-a225-58ae0861d183" class="numbered-list" start="2"><li><strong>ConcreteStateA (Somut Durum A)</strong> ve <strong>ConcreteStateB (Somut Durum B)</strong>:<ul id="8e68bfde-a802-436d-a361-d3ea1e02412e" class="bulleted-list"><li style="list-style-type:disc"><code>State</code> arayüzünü uygular ve belirli bir duruma özgü davranışları içerir.</li></ul><ul id="9dfff51c-5abc-4bce-a46d-ee94983a9320" class="bulleted-list"><li style="list-style-type:disc">Her bir somut durum, <code>handle()</code> yöntemini kendi durumu için özelleştirir.</li></ul></li></ol><ol type="1" id="49d411db-66eb-4fe6-adf0-57622948466b" class="numbered-list" start="3"><li><strong>Context (Bağlam)</strong>:<ul id="93d4aceb-24a3-4a7d-8c52-02520d3915a4" class="bulleted-list"><li style="list-style-type:disc">Mevcut durumu tutar ve duruma bağlı olarak davranışını değiştirir.</li></ul><ul id="9ee633a0-b47a-4314-88f6-7a9998e0dda3" class="bulleted-list"><li style="list-style-type:disc"><code>request()</code>: İstemcinin çağırdığı yöntemdir ve bu yöntem mevcut duruma göre <code>handle()</code> yöntemini çağırır.</li></ul></li></ol><p id="050e26d5-5641-4100-b267-3af3b856f82b" class="">Diyagramın detayları:</p><ul id="9e57f2ec-d4db-4009-9a14-db4d5aa9a415" class="bulleted-list"><li style="list-style-type:disc"><strong>Context</strong>, mevcut durumu (<code>State</code> arayüzü) tutar ve istemciden (<code>Client</code>) gelen isteklere göre bu durumu yönetir.</li></ul><ul id="a321cb4a-033a-4563-ac20-390246eadb4b" class="bulleted-list"><li style="list-style-type:disc"><strong>State</strong> arayüzü, <code>handle()</code> yöntemini tanımlar.</li></ul><ul id="aed2f281-c7bd-43a2-86a1-fa4b6d97f04e" class="bulleted-list"><li style="list-style-type:disc"><strong>ConcreteStateA</strong> ve <strong>ConcreteStateB</strong>, <code>State</code> arayüzünü uygular ve <code>handle()</code> yöntemini kendi durumlarına göre özelleştirir.</li></ul><ul id="f566d645-da3d-4720-95e3-d2817466080f" class="bulleted-list"><li style="list-style-type:disc"><strong>Context</strong>, <code>request()</code> yöntemini çağırdığında, mevcut durumun <code>handle()</code> yöntemini çağırır ve böylece davranış, mevcut duruma göre belirlenir.</li></ul><p id="9fd69efa-66a6-434d-9666-197a664b32dd" class="">Günlük hayattan bir örnek vermek gerekirse:</p><ul id="6109148c-0a75-4f6b-bf1a-8a59e68e7123" class="bulleted-list"><li style="list-style-type:disc">Bir trafik ışığını düşünün.<ul id="35fa34e0-4b4f-4387-8f0a-89a3fa7dcbc1" class="bulleted-list"><li style="list-style-type:circle"><strong>State Arayüzü</strong>, trafik ışığının farklı durumlarında (kırmızı, sarı, yeşil) yapılacak ortak işlemleri tanımlar.</li></ul><ul id="c3d1660c-7ac9-4b48-ab78-08d2deb1091b" class="bulleted-list"><li style="list-style-type:circle"><strong>ConcreteStateA</strong>, trafik ışığının kırmızı durumda olduğu bir durumu temsil eder ve bu durumda yapılacak işlemleri (örneğin, araçları durdurma) tanımlar.</li></ul><ul id="19a77229-fb1b-4d01-9292-96578f2f923c" class="bulleted-list"><li style="list-style-type:circle"><strong>ConcreteStateB</strong>, trafik ışığının yeşil durumda olduğu bir durumu temsil eder ve bu durumda yapılacak işlemleri (örneğin, araçları geçirme) tanımlar.</li></ul><ul id="41095f77-6900-44b5-88a3-509956dd4f8b" class="bulleted-list"><li style="list-style-type:circle"><strong>Context</strong>, trafik ışığının mevcut durumunu tutar ve duruma göre davranışını değiştirir (örneğin, kırmızıdan yeşile geçiş).</li></ul></li></ul><p id="b72e693e-e76e-4b2b-af2f-56dc173351d7" class="">Bu desen, bir nesnenin davranışını durumuna göre değiştirmeyi ve bu durumları yönetmeyi kolaylaştırır. Özellikle, bir nesnenin iç durumuna bağlı olarak davranışının dinamik olarak değiştiği durumlarda kullanışlıdır.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="b299107e-96ab-4698-bcc8-9e17efec9225"><div style="font-size:1.5em"><span class="icon">🔑</span></div><div style="width:100%">Command design pattern örneğine <mark class="highlight-default">aşağıdaki</mark><mark class="highlight-blue"> </mark><mark class="highlight-blue"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/State">linkten</a></strong></mark><mark class="highlight-default"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Iterator"> </a></strong></mark><mark class="highlight-default">ulaşabilirsiniz:</mark></div></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="be205d22-e9ab-43f6-970f-526239cb85cb" class="code"><code class="language-Shell">https://github.com/1omerozturk/Design-Patterns/tree/main/State</code></pre><figure id="9c119830-242a-4fdd-a520-03f827506061"><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/State" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Design-Patterns/State at main · 1omerozturk/Design-Patterns</div><div class="bookmark-description">Contribute to 1omerozturk/Design-Patterns development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/1omerozturk/Design-Patterns/tree/main/State</div></div><img src="https://opengraph.githubassets.com/dc920f8d842b70e6878cc857af97474a4b5dcc258a7e7043453c12e3cf571f12/1omerozturk/Design-Patterns" class="bookmark-image"/></a></figure><hr id="b1f32566-c055-4cd8-861e-64160a8342e6"/><hr id="4b52cf11-13a2-4113-a2c3-3d61ea312010"/><h3 id="278a17cb-53ec-44b6-82f6-4da045b053b9" class="">Factory Method Design Pattern</h3><ul id="89ed3db4-aab0-4a18-b602-9770039bb7d6" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Factory:</span></strong> Fabrika, imalathane, yapımevi; <span style="border-bottom:0.05em solid">Method:</span> yöntem</li></ul><ul id="4f87fcbc-930f-4774-a705-43fe3bd5b60a" class="bulleted-list"><li style="list-style-type:disc">Factory ⇒ Virtual Constructor - Sanal yapılandırıcı mahlaslarıdır.  </li></ul><ul id="7fce23d1-150f-4a2e-9643-dec3714997a5" class="bulleted-list"><li style="list-style-type:disc">Sınıf yaratımsaldır.</li></ul><ul id="92b0c727-2d7a-4cb9-8090-e2950fb9d33e" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Amaç:</span></strong> Bir nesnenin yaratılması için tanımlanan ara yüzün altsınıflarına bu nesnenin hangi sınıftan olacağına karar verme hakkı sağlamaktır.</li></ul><p id="d20a15d0-2506-4604-8bab-116b6587aa56" class="">
+</p><p id="cac3b06e-69c3-4a88-aa02-b98f1f106be6" class=""><span style="border-bottom:0.05em solid">Factory Method Design Pattern UML diyagramı örneği:</span> </p><figure id="f20cc1d9-61cb-4fc7-ba71-9ab796ccc68f" class="image"><a href="https://github.com/1omerozturk/Design-Patterns/blob/main/images/factory_design_pattern.png?raw=true"><img src="https://github.com/1omerozturk/Design-Patterns/blob/main/images/factory_design_pattern.png?raw=true"/></a></figure><p id="9cc37894-d25c-4482-8a60-082e3fa0a91b" class="">Bu UML diyagramı, <strong>Factory Method</strong> tasarım desenini kullanarak araç üretimini modelleyen bir örneği göstermektedir. Bu desen, nesne oluşturma sürecini soyutlar ve alt sınıflara bırakır, böylece nesne oluşturma işlemi kolayca genişletilebilir ve değiştirilebilir hale gelir. Bu diyagramdaki bileşenler ve ilişkileri şöyle açıklanabilir:</p><ol type="1" id="80a78389-00c9-44ea-a342-74b0767a7560" class="numbered-list" start="1"><li><strong>Vehicle (Araç) Soyut Sınıfı</strong>:<ul id="b4dfabef-5fc0-4fe5-82ea-210b0834d9f4" class="bulleted-list"><li style="list-style-type:disc"><code>plateNumber</code>: Araçların plaka numarasını tutan bir özellik.</li></ul><ul id="5a33bba2-034d-4cf7-a421-d779fcf191ae" class="bulleted-list"><li style="list-style-type:disc"><code>stop()</code>: Araçların durması için bir yöntem.</li></ul><ul id="541c3567-2d0f-48eb-8cba-a0596e854db9" class="bulleted-list"><li style="list-style-type:disc"><code>move()</code>: Araçların hareket etmesi için bir yöntem.</li></ul><ul id="891873be-be05-466a-9d49-de07e7e16cc2" class="bulleted-list"><li style="list-style-type:disc">Bu soyut sınıf, <code>Car</code> ve <code>Truck</code> gibi alt sınıflar tarafından genişletilir.</li></ul></li></ol><ol type="1" id="bec63d95-05c3-42a5-ab68-582edea61dc2" class="numbered-list" start="2"><li><strong>Car (Araba) ve Truck (Kamyon) Sınıfları</strong>:<ul id="820bb1de-76e2-4cff-af8b-2f8eac8325c6" class="bulleted-list"><li style="list-style-type:disc"><code>Vehicle</code> soyut sınıfını genişletirler.</li></ul><ul id="cb15bda6-2f11-49b4-9f59-d312315bf0a7" class="bulleted-list"><li style="list-style-type:disc"><code>stop()</code> ve <code>move()</code> yöntemlerini kendi özelliklerine göre uygularlar.</li></ul><ul id="738d5f33-752e-42cd-8f04-ef46211f58f7" class="bulleted-list"><li style="list-style-type:disc">Her iki sınıf da <code>Vehicle</code> soyut sınıfından türetilmiştir ve kendi spesifik davranışlarını tanımlar.</li></ul></li></ol><ol type="1" id="4d7c199b-f1c1-4c92-8c92-a5af1b85010b" class="numbered-list" start="3"><li><strong>VehicleFactory (Araç Fabrikası) Sınıfı</strong>:<ul id="29d8c8f0-80df-467f-8d9c-b7e0b25d5589" class="bulleted-list"><li style="list-style-type:disc"><code>getVehicle(String vehicleType)</code>: Belirli bir araç türüne göre bir <code>Vehicle</code> nesnesi oluşturur ve döner.</li></ul><ul id="29a1aeee-ee29-4c59-8f95-aafb27672023" class="bulleted-list"><li style="list-style-type:disc">Bu sınıf, araç oluşturma işlemini soyutlar ve istemciden (client) bağımsız hale getirir.</li></ul></li></ol><ol type="1" id="f3f3026d-dde7-4bf6-905e-1491bab441a0" class="numbered-list" start="4"><li><strong>VehicleFactoryDemo (Araç Fabrikası Demo) Sınıfı</strong>:<ul id="660e9f5d-e97e-49c4-a724-890f2dcccc78" class="bulleted-list"><li style="list-style-type:disc"><code>main()</code>: Programın çalıştırıldığı ana yöntemdir.</li></ul><ul id="4c039ca3-15dd-4381-b0ac-db7c0033d6f8" class="bulleted-list"><li style="list-style-type:disc">Bu sınıf, <code>VehicleFactory</code> sınıfını kullanarak belirli araç türlerini oluşturur ve araçların davranışlarını test eder.</li></ul></li></ol><p id="a00e82a9-b4c4-4052-b054-1e7052c22566" class="">Diyagramın detayları:</p><ul id="22b515a5-3b32-4734-8a53-bd17fe7e2982" class="bulleted-list"><li style="list-style-type:disc"><strong>Vehicle</strong> soyut sınıfı, tüm araçların ortak özelliklerini ve yöntemlerini tanımlar.</li></ul><ul id="ce3193bf-2a1e-4f88-adaf-394c3aad62e0" class="bulleted-list"><li style="list-style-type:disc"><strong>Car</strong> ve <strong>Truck</strong> sınıfları, <code>Vehicle</code> soyut sınıfını genişleterek kendi spesifik davranışlarını uygular.</li></ul><ul id="5eed285e-9894-441b-a65f-3cd92e285837" class="bulleted-list"><li style="list-style-type:disc"><strong>VehicleFactory</strong> sınıfı, <code>getVehicle()</code> yöntemini kullanarak belirli araç türlerini oluşturur. Bu yöntem, istemciden (client) aldığı araç türüne göre (<code>vehicleType</code>), <code>Car</code> veya <code>Truck</code> nesnesi oluşturur.</li></ul><ul id="12675d00-f707-47c0-b7db-d7ad74dd47ee" class="bulleted-list"><li style="list-style-type:disc"><strong>VehicleFactoryDemo</strong> sınıfı, <code>main()</code> yönteminde <code>VehicleFactory</code> sınıfını kullanarak belirli araç türlerini oluşturur ve bu araçların <code>stop()</code> ve <code>move()</code> yöntemlerini çağırarak test eder.</li></ul><p id="4a32bb9d-e487-4629-8154-af2597396d70" class="">
+</p><p id="afb2af30-4bb1-45dc-9e66-5065622719b7" class=""><span style="border-bottom:0.05em solid">Günlük hayattan bir örnek vermek gerekirse:</span></p><ul id="67387721-bd7c-40e4-8598-24a863d7abea" class="bulleted-list"><li style="list-style-type:disc">Bir araba kiralama şirketini düşünün.<ul id="f7929654-76a8-4540-ba71-fb447abd4abc" class="bulleted-list"><li style="list-style-type:circle"><strong>Vehicle</strong> soyut sınıfı, tüm araçların (örneğin, arabalar ve kamyonlar) ortak özelliklerini (örneğin, plaka numarası) ve davranışlarını (örneğin, durma ve hareket etme) tanımlar.</li></ul><ul id="0eee56a8-5fd6-4f8a-a4b8-ceb6e9e1f122" class="bulleted-list"><li style="list-style-type:circle"><strong>Car</strong> ve <strong>Truck</strong> sınıfları, belirli araç türlerini temsil eder ve <code>Vehicle</code> soyut sınıfından türetilir.</li></ul><ul id="347b9b95-ffa6-451a-8622-e38c0b548fab" class="bulleted-list"><li style="list-style-type:circle"><strong>VehicleFactory</strong> sınıfı, müşterinin (client) talebine göre belirli bir araç türünü oluşturur.</li></ul><ul id="d63ad1a7-09ba-4816-8142-4e5251ef9909" class="bulleted-list"><li style="list-style-type:circle"><strong>VehicleFactoryDemo</strong> sınıfı, belirli bir araç türünü oluşturmak ve test etmek için <code>VehicleFactory</code> sınıfını kullanır.</li></ul></li></ul><p id="030af7ee-5f7f-4d22-9b53-b386e06d9ee3" class="">Bu desen, nesne oluşturma sürecini soyutlamak ve genişletilebilir hale getirmek için kullanılır. Özellikle, hangi nesne türünün oluşturulacağına dinamik olarak karar verilmesi gerektiğinde bu desen çok kullanışlıdır.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="a4aca4cf-29c8-4d8f-91d7-75936255cc53"><div style="font-size:1.5em"><span class="icon">🔑</span></div><div style="width:100%">Command design pattern örneğine <mark class="highlight-default">aşağıdaki</mark><mark class="highlight-blue"> </mark><mark class="highlight-blue"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/State">linkten</a></strong></mark><mark class="highlight-default"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Iterator"> </a></strong></mark><mark class="highlight-default">ulaşabilirsiniz:</mark></div></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="7468f577-fcc2-4594-8556-744792f4ab53" class="code"><code class="language-Shell">https://github.com/1omerozturk/Design-Patterns/tree/main/State</code></pre><figure id="82acc359-ae45-47d0-809c-5de797b8f9cf"><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Command" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Design-Patterns/Command at main · 1omerozturk/Design-Patterns</div><div class="bookmark-description">Contribute to 1omerozturk/Design-Patterns development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/1omerozturk/Design-Patterns/tree/main/Command</div></div><img src="https://opengraph.githubassets.com/8031d28a8a5f1bc20ef51d7d65e9782afc447c48b0b314867ecfc6623e6b7040/1omerozturk/Design-Patterns" class="bookmark-image"/></a></figure><hr id="eacb1692-cf77-4337-85e8-2bbf3f644d14"/><hr id="1f257aa9-d09c-4770-9554-2fdd5731c6e9"/><p id="1b67c7ee-ef05-4aa0-86c7-204323bc3478" class="">
+</p><h3 id="8479ba55-12e8-4c38-8278-e90af31af429" class="">Abstract Factory Design Pattern</h3><ul id="601b5c1e-f611-494f-86a2-b536660edc0a" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Abstract:</span></strong> soryut, <strong><span style="border-bottom:0.05em solid">Factory:</span></strong> fabrika, imalathane, yapımevi…</li></ul><ul id="86802841-213a-4cde-bf4f-42241d711794" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid">Kit </span>( takım çantası, alet takımı ) diğer bilinen isimleridir.</li></ul><ul id="37525220-c836-412a-9d7d-2075fa5703da" class="bulleted-list"><li style="list-style-type:disc">Factory Method deseni nesneleri üretir.</li></ul><ul id="79c1f4e7-746d-4569-aced-80df9076e709" class="bulleted-list"><li style="list-style-type:disc">Nesne yaratımsal desendir.</li></ul><ul id="1547fb67-2e8c-4ff6-ac87-dff4621cc866" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Amaç:</span></strong> Somut sınıflarını belirtmeden bağlantılı ya da bağımlı olan nesneler grubunu yaratacak bir ara yüz sunmak.</li></ul><ul id="2a5a3c6f-5fab-4bb9-9541-9614737e12bb" class="bulleted-list"><li style="list-style-type:disc">Yeni ürün desteği zayıftır, bu yüzden fazladan kod yazılması demektir.</li></ul><ul id="e5cc8597-2de9-498f-9d28-a66006a6e96d" class="bulleted-list"><li style="list-style-type:disc">Somut sınıfların ayrıştırılmasını sağlar.</li></ul><ul id="3aaeec78-06ef-4384-8971-714287f09628" class="bulleted-list"><li style="list-style-type:disc">İsimleri sadece yaratıldığı yerde geçerler.</li></ul><ul id="5396ff8e-7c12-4286-a944-85da604d5b6c" class="bulleted-list"><li style="list-style-type:disc">Uygulamalarda genelde tek bir factory olur yani <span style="border-bottom:0.05em solid">Singleton</span> durlar.</li></ul><p id="885693a7-33fa-4287-9340-66361e8e2979" class=""><mark class="highlight-teal"><span style="border-bottom:0.05em solid">Abstract Factory Design Pattern UML diyagramı:</span></mark> </p><figure id="279e6a3a-cc26-4c75-a542-b6506ee54695" class="image"><a href="https://github.com/1omerozturk/Design-Patterns/blob/main/images/abs_fac.png?raw=true"><img src="https://github.com/1omerozturk/Design-Patterns/blob/main/images/abs_fac.png?raw=true"/></a></figure><p id="7bdaec8f-40fd-4a08-af03-5218a6da9fed" class="">Bu UML diyagramı, <strong>Abstract Factory</strong> tasarım desenini göstermektedir. Abstract Factory deseni, ilgili nesnelerin ailelerini, onların somut sınıflarını belirtmeden oluşturmak için kullanılan bir creational (yaratıcı) tasarım desenidir. Bu desen, çeşitli ürünlerin oluşturulmasını soyutlamak ve istemcinin (client) hangi somut sınıfları kullandığını bilmesini engellemek için kullanılır.</p><p id="7160192c-f4a7-4a0f-842f-2ce43f4d3b74" class="">Diyagramın ana bileşenleri ve işlevleri şu şekildedir:</p><ol type="1" id="262a5fb5-8992-4d51-b5ea-0309d7ced781" class="numbered-list" start="1"><li><strong>AbstractFactory</strong>:<ul id="88c17efd-9202-47a2-8b24-56fec47ed18c" class="bulleted-list"><li style="list-style-type:disc">Ürün ailesinin her bir türünü oluşturmak için soyut yöntemler tanımlar. Örnekte, <code>CreateProductA()</code> ve <code>CreateProductB()</code> yöntemleri bulunmaktadır.</li></ul></li></ol><ol type="1" id="a8794aee-f7c3-462f-91e8-2aa60010b8b2" class="numbered-list" start="2"><li><strong>ConcreteFactory1 ve ConcreteFactory2</strong>:<ul id="6a09dd6b-811d-486b-b83b-d138fbb15438" class="bulleted-list"><li style="list-style-type:disc"><code>AbstractFactory</code> arayüzünü uygularlar ve her biri belirli ürün ailesinin somut nesnelerini oluşturur.</li></ul><ul id="100ffa20-fe1c-4b5a-bf65-c356472eb84c" class="bulleted-list"><li style="list-style-type:disc"><code>ConcreteFactory1</code>, <code>ProductA1</code> ve <code>ProductB1</code> nesnelerini oluşturur.</li></ul><ul id="9d255e9c-5428-49c3-99d5-69699897d029" class="bulleted-list"><li style="list-style-type:disc"><code>ConcreteFactory2</code>, <code>ProductA2</code> ve <code>ProductB2</code> nesnelerini oluşturur.</li></ul></li></ol><ol type="1" id="d8e9f0e8-b019-4731-90dc-939ac25ccfc5" class="numbered-list" start="3"><li><strong>AbstractProductA ve AbstractProductB</strong>:<ul id="b88d8ebf-e938-47c1-ba46-6312f4ce7be3" class="bulleted-list"><li style="list-style-type:disc">Ürün ailesindeki her bir ürün türü için ortak bir ara yüz tanımlarlar.</li></ul><ul id="78c81a78-92c7-4619-9af5-5781a44fd96e" class="bulleted-list"><li style="list-style-type:disc">Örnekte, <code>AbstractProductA</code> ve <code>AbstractProductB</code> ürün türleri bulunmaktadır.</li></ul></li></ol><ol type="1" id="d74089fc-0b3d-4485-9001-e45f0036c6c3" class="numbered-list" start="4"><li><strong>ProductA1, ProductA2, ProductB1 ve ProductB2</strong>:<ul id="ca7b5f58-0ff0-4ef1-aa3c-2564e9b724c3" class="bulleted-list"><li style="list-style-type:disc"><code>AbstractProductA</code> ve <code>AbstractProductB</code> ara yüzlerini uygularlar ve belirli somut ürünleri temsil ederler.</li></ul><ul id="2d5da5ad-38ff-4351-b2b2-68d846972068" class="bulleted-list"><li style="list-style-type:disc"><code>ProductA1</code> ve <code>ProductA2</code>, <code>AbstractProductA</code> ara yüzünü uygular.</li></ul><ul id="1bebee91-eef4-449b-a2a8-36a57299e721" class="bulleted-list"><li style="list-style-type:disc"><code>ProductB1</code> ve <code>ProductB2</code>, <code>AbstractProductB</code> ara yüzünü uygular.</li></ul></li></ol><ol type="1" id="4edee066-3ef9-42fd-bcf4-3630bc8af174" class="numbered-list" start="5"><li><strong>Client (İstemci)</strong>:<ul id="af474e21-6979-46f4-ae21-81bee7207996" class="bulleted-list"><li style="list-style-type:disc">Abstract Factory ve Abstract Product ara yüzlerini kullanarak ürün ailelerinin nesnelerini oluşturur ve kullanır.</li></ul><ul id="cea43a98-5c95-4850-9441-2a3d2823abc7" class="bulleted-list"><li style="list-style-type:disc">İstemci, hangi somut sınıfın kullanıldığını bilmez; sadece soyut arayüzleri kullanır.</li></ul></li></ol><p id="550e44d4-8258-48dd-9fee-db5dccbf84aa" class=""><mark class="highlight-teal"><span style="border-bottom:0.05em solid">Günlük Hayattan Örnek:</span></mark></p><p id="5903016f-78f2-4a4c-b3ce-1e4001bb399b" class="">Bir mobilya mağazası düşünün. Bu mağaza, farklı stillerde mobilyalar (modern, klasik) satıyor. Her stil, bir ürün ailesi (sandalye, masa) içerir.</p><ul id="4ffe2563-10ad-4953-bb7b-8192377af6b7" class="bulleted-list"><li style="list-style-type:disc"><strong>AbstractFactory</strong>: Mobilya Fabrikası<ul id="f3544b9c-03fa-43ff-a3f7-886667df7d0c" class="bulleted-list"><li style="list-style-type:circle"><code>CreateChair()</code>: Sandalye oluşturma metodu</li></ul><ul id="71dd02bc-1254-4449-aeb0-755ea718bfbe" class="bulleted-list"><li style="list-style-type:circle"><code>CreateTable()</code>: Masa oluşturma metodu</li></ul></li></ul><ul id="47eeaaa5-bbf5-4cfd-98c2-cbb1b2cfec0c" class="bulleted-list"><li style="list-style-type:disc"><strong>ConcreteFactory1</strong>: Modern Mobilya Fabrikası<ul id="1e3bfd25-76ed-4436-9c50-6cdcb36e9205" class="bulleted-list"><li style="list-style-type:circle"><code>CreateChair()</code>: Modern Sandalye oluşturur</li></ul><ul id="25d08d5e-23db-415a-80f9-70997105d36c" class="bulleted-list"><li style="list-style-type:circle"><code>CreateTable()</code>: Modern Masa oluşturur</li></ul></li></ul><ul id="84b8047a-ccf7-4730-8682-72bdf8c98940" class="bulleted-list"><li style="list-style-type:disc"><strong>ConcreteFactory2</strong>: Klasik Mobilya Fabrikası<ul id="bdc68b1c-b3c9-4d30-9430-cbde159ab209" class="bulleted-list"><li style="list-style-type:circle"><code>CreateChair()</code>: Klasik Sandalye oluşturur</li></ul><ul id="9a1b3ca7-534e-4279-a0f7-07e075f02028" class="bulleted-list"><li style="list-style-type:circle"><code>CreateTable()</code>: Klasik Masa oluşturur</li></ul></li></ul><ul id="17497955-3ee4-412d-b799-453683c1792b" class="bulleted-list"><li style="list-style-type:disc"><strong>AbstractProductA</strong>: Sandalye ara yüzü</li></ul><ul id="983141eb-4147-4d70-9ae1-0c6648b8a617" class="bulleted-list"><li style="list-style-type:disc"><strong>AbstractProductB</strong>: Masa ara yüzü</li></ul><ul id="b0ddf032-6745-4841-86bd-cc9b414c231b" class="bulleted-list"><li style="list-style-type:disc"><strong>ProductA1</strong>: Modern Sandalye</li></ul><ul id="532dfa9b-838b-43a0-bd75-e3ae7f65948e" class="bulleted-list"><li style="list-style-type:disc"><strong>ProductA2</strong>: Klasik Sandalye</li></ul><ul id="1518a3db-a75e-4262-96cb-0fc910941a75" class="bulleted-list"><li style="list-style-type:disc"><strong>ProductB1</strong>: Modern Masa</li></ul><ul id="775f5e9e-9b6e-4f01-a2bf-632380140df4" class="bulleted-list"><li style="list-style-type:disc"><strong>ProductB2</strong>: Klasik Masa</li></ul><ul id="8f791d38-e089-4e28-b575-a830e91b9dab" class="bulleted-list"><li style="list-style-type:disc"><strong>Client</strong>: Mobilya mağazası<ul id="0a22e59e-2293-42c9-9fdd-b693a5263daa" class="bulleted-list"><li style="list-style-type:circle">Hangi tür mobilya (modern veya klasik) kullanılacağını belirler ve ilgili fabrika sınıfını kullanarak mobilya oluşturur.</li></ul></li></ul><p id="af9b5651-3b09-4f53-b392-1532f9af7f11" class="">Bu örnek, Abstract Factory deseninin nasıl çalıştığını ve farklı ürün ailelerinin nasıl oluşturulduğunu göstermektedir.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="41620d15-f319-4b89-909e-fb9c5db55c9a"><div style="font-size:1.5em"><span class="icon">🔑</span></div><div style="width:100%">Absract Factory design pattern örneğine <mark class="highlight-default">aşağıdaki</mark><mark class="highlight-blue"> </mark><mark class="highlight-blue"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Abstract_Factory">linkten</a></strong></mark><mark class="highlight-default"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Iterator"> </a></strong></mark><mark class="highlight-default">ulaşabilirsiniz:</mark></div></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="59c4f039-6411-4951-b3f8-5a47d1f489b9" class="code"><code class="language-Shell">https://github.com/1omerozturk/Design-Patterns/tree/main/Abstract_Factory</code></pre><figure id="c02246a3-468d-4d6d-a9c3-f07517603b24"><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Abstract_Factory" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Design-Patterns/Abstract_Factory at main · 1omerozturk/Design-Patterns</div><div class="bookmark-description">Contribute to 1omerozturk/Design-Patterns development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/1omerozturk/Design-Patterns/tree/main/Abstract_Factory</div></div><img src="https://opengraph.githubassets.com/dc4a76e5f47e8b5a23da7c1710f2f2868e02f119d501ca520441cff363c1d967/1omerozturk/Design-Patterns" class="bookmark-image"/></a></figure><hr id="27a97d14-2c19-4552-adc6-87a81f0488a9"/><hr id="602cb6db-ff23-4e79-893c-3c7871e951e8"/><h3 id="7165c646-5124-452e-9e8d-9f1a720e9fab" class="">Singleton Design Pattern</h3><ul id="d77ba1f6-a050-4004-a61c-a2af2cd9f3ee" class="bulleted-list"><li style="list-style-type:disc"><strong>Singleton</strong>: Tekil, tekil kalıp anlamlarına gelmektedir.</li></ul><ul id="d5964e94-04f9-4de7-b0c6-a73384d824ef" class="bulleted-list"><li style="list-style-type:disc">Nesne yaratımsal bir tasarım desenidir.</li></ul><ul id="3f585777-72e0-4b96-91a7-6eda5716c273" class="bulleted-list"><li style="list-style-type:disc">Çok iş parçacıklıdır (multithreaded).</li></ul><ul id="fe1c1357-39f3-497c-8464-18febcf1b4a6" class="bulleted-list"><li style="list-style-type:disc">Static Instance () { return uniqueInstance; }</li></ul><ul id="752ad8ed-1bdd-4a64-a5b2-e8cea4dbbf90" class="bulleted-list"><li style="list-style-type:disc">Static yapıdadır.</li></ul><ul id="96931102-7d11-4a11-b689-991bd2f83eae" class="bulleted-list"><li style="list-style-type:disc"><strong>Amaç:</strong> Bir sınıftan yalnızca bir nesnenin olması ve bu nesneye global erişim için bir nokta sağlanmasıdır.</li></ul><ul id="ea08cf33-9bd0-4541-8866-049fc57c69e0" class="bulleted-list"><li style="list-style-type:disc">Yapılandırıcısı ⇒ <code>constructor</code> : <code>private</code> olarak tanımlanır.</li></ul><ul id="64e5d417-aa5f-4a30-a5db-4a979b1a1db2" class="bulleted-list"><li style="list-style-type:disc">Genelde veri tabanı, konfigürasyon, logger vb. özel bilgileri içeren sınıflarda sadece bir noktadan erişim sağlamak gerektiğinden kullanılır.</li></ul><p id="52f6ebf7-99e0-4326-8a29-e4d46569290b" class=""><mark class="highlight-blue"><span style="border-bottom:0.05em solid">Singleton Design Pattern UML diyagramı:</span></mark></p><figure id="b471f17e-47e5-44af-bb4b-9a9fa02c8195" class="image"><a href="https://github.com/1omerozturk/Design-Patterns/blob/main/images/singleton.png?raw=true"><img src="https://github.com/1omerozturk/Design-Patterns/blob/main/images/singleton.png?raw=true"/></a></figure><p id="6bd31870-379b-462d-a4df-a810a559e697" class="">Bu desen iki temel öğe içerir:</p><ol type="1" id="5f758350-f654-4098-98e8-90d28691dcd6" class="numbered-list" start="1"><li><strong>Singleton Sınıfı</strong>: Bu sınıf kendi örneğini oluşturur ve ona bir erişim noktası sağlar.</li></ol><ol type="1" id="1f571cb4-4c8c-4a5e-97ad-7f17457ad6d6" class="numbered-list" start="2"><li><strong>Client</strong>: Singleton sınıfının örneğini kullanır.</li></ol><ul id="5bf85ede-a2b5-4961-a994-d62c0e917791" class="bulleted-list"><li style="list-style-type:disc"><strong>Singleton</strong>: Singleton sınıfı, kendi örneğini saklayan statik bir <code>instance</code> değişkeni içerir. Bu sınıfın <code>getInstance()</code> metodu, sınıfın tek örneğini döner. Eğer örnek henüz oluşturulmadıysa, <code>getInstance()</code> metodu tarafından oluşturulur.</li></ul><ul id="10c8b834-eb91-43be-bd27-02f06776e49a" class="bulleted-list"><li style="list-style-type:disc"><strong>Client</strong>: Singleton sınıfının örneğine erişir ve onu kullanır.</li></ul><p id="1cce36c5-60c0-4c1f-bae3-4f2fced349b3" class="">🔑 Absract Factory design pattern örneğine aşağıdaki <a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Singleton">**linkten</a> **ulaşabilirsiniz:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="c8c3c7b8-1296-43a1-a321-ece5e5829656" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">https://github.com/1omerozturk/Design-Patterns/tree/main/Singleton</code></pre><figure id="2f17af35-8d16-49a9-834e-4f28e5ed94b0"><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Singleton" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Design-Patterns/Singleton at main · 1omerozturk/Design-Patterns</div><div class="bookmark-description">Contribute to 1omerozturk/Design-Patterns development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/1omerozturk/Design-Patterns/tree/main/Singleton</div></div><img src="https://opengraph.githubassets.com/786e6bd6042aee3d8b0c52e39a16a91ef8ec83aa574a1b3c0b110e7ac22611eb/1omerozturk/Design-Patterns" class="bookmark-image"/></a></figure><hr id="54bf06e9-30be-435b-a6d4-027d9a8f090a"/><hr id="c6d2da87-60f5-4f9f-87f5-1900b530bef0"/><p id="31a390ea-63fb-49f3-9e69-eb6fe42ce6f2" class="">
+</p><h3 id="3936badb-c9e9-4b9b-a1dd-bca75788158d" class="">Adapter Design Pattern</h3><ul id="9f870ffa-ceda-40de-bee0-ba5a342cfd20" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Adapter:</span></strong> <span style="border-bottom:0.05em solid">Adaptör</span>, <span style="border-bottom:0.05em solid">uyarlayan</span> anlamlarına gelmektedir.</li></ul><ul id="b081edcc-27d7-450d-a356-23a43974c275" class="bulleted-list"><li style="list-style-type:disc">Diğer isimleri: Wrapper, sarmalayan, saran.</li></ul><ul id="7353abe3-bde4-4b93-acd0-b5ecfbcac213" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Amaç:</span></strong> Bir sınıfın ara yüzünü, istemcilerin beklediği ara yüze <span style="border-bottom:0.05em solid">dönüştürmek.</span></li></ul><ul id="4358900b-07fd-436e-8fa0-e3f050f45bb3" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid">Uyumsuzluk</span> problemlerini önlemek için kullanılır.</li></ul><ul id="4f86e2c7-9cf2-42bf-afb8-1821afc6c569" class="bulleted-list"><li style="list-style-type:disc">Hem <span style="border-bottom:0.05em solid">sınıf</span> hem de <span style="border-bottom:0.05em solid">nesne </span>yapısal bir tasarım desenidir.</li></ul><ul id="95739418-9e3a-4518-a850-b93c93970284" class="bulleted-list"><li style="list-style-type:disc">Adapter deseni, sınıfların birlikte çalışmasını sağlarken, var olan kodun değiştirilmesine gerek kalmadan, arayüzlerin uyumsuzluklarını giderir.</li></ul><p id="de39363d-743a-4e35-a570-62edb5387dff" class=""><mark class="highlight-teal"><span style="border-bottom:0.05em solid">Adapter Design Pattern UML Diyagramı örneği:</span></mark></p><figure id="c4819ae3-6d0a-4298-bd2d-8d55c83edf84" class="image"><a href="https://github.com/1omerozturk/Design-Patterns/blob/main/images/adapter.jpg?raw=true"><img src="https://github.com/1omerozturk/Design-Patterns/blob/main/images/adapter.jpg?raw=true"/></a></figure><p id="349e5046-3129-46db-8549-edf8753fc5bc" class="">Adapter deseninde dört ana bileşen bulunur:</p><ol type="1" id="3f0b1332-9c71-49b8-95ee-331715f3104f" class="numbered-list" start="1"><li><strong>Client (İstemci)</strong>: Adapt edilmiş arayüzü kullanarak çalışır.</li></ol><ol type="1" id="cc431662-7ff9-4cad-abe0-b6652e41a4cd" class="numbered-list" start="2"><li><strong>Target (Hedef)</strong>: İstemcinin çalışmak istediği arayüz.</li></ol><ol type="1" id="14b31cca-c718-49c5-b109-80adcc4a8343" class="numbered-list" start="3"><li><strong>Adaptee (Uyarlanan)</strong>: Adapt edilmesi gereken mevcut sınıf.</li></ol><ol type="1" id="0b832b92-b3ea-42f7-85da-deb06d7e05c6" class="numbered-list" start="4"><li><strong>Adapter</strong>: Adaptee&#x27;yi Target arayüzüne uyarlayan sınıf.</li></ol><ul id="43d5f31c-6d25-4832-874c-71c060f4b841" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue">Günlük hayat örneği:</mark><p id="8f69daa6-0291-4873-9f54-ff40262ff064" class="">Bir şarj cihazı (Adapter) aracılığıyla bir cep telefonunu (Client) eski tip priz (Adaptee) ile şarj etmeyi örnek olarak verebiliriz. Hayatımızda fark etmeden en fazla kullandığımız yapılardan biridir Adapter ( dönüştürücü ) yapıları. </p></li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="8445dbe5-b428-4887-8866-52e32f5b2be1"><div style="font-size:1.5em"><span class="icon">🔑</span></div><div style="width:100%">Adapter design pattern örneğine <mark class="highlight-default">aşağıdaki</mark><mark class="highlight-blue"> </mark><mark class="highlight-blue"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Adapter">linkten</a></strong></mark><mark class="highlight-default"><strong><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Iterator"> </a></strong></mark><mark class="highlight-default">ulaşabilirsiniz:</mark></div></figure><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="6072216e-501f-4e16-98db-0537e53f858f" class="code"><code class="language-Shell">https://github.com/1omerozturk/Design-Patterns/tree/main/Adapter</code></pre><figure id="d4ea5462-15b4-4c82-8815-b7f6a15712eb"><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Adapter" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Design-Patterns/Adapter at main · 1omerozturk/Design-Patterns</div><div class="bookmark-description">Contribute to 1omerozturk/Design-Patterns development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/1omerozturk/Design-Patterns/tree/main/Adapter</div></div><img src="https://opengraph.githubassets.com/786e6bd6042aee3d8b0c52e39a16a91ef8ec83aa574a1b3c0b110e7ac22611eb/1omerozturk/Design-Patterns" class="bookmark-image"/></a></figure><hr id="adc639bf-8154-40be-a987-68d5bcdb23e0"/><hr id="ab633191-5b16-4e1a-aa0d-3bac10592179"/><h3 id="23e8c2aa-7d05-44e1-809d-f1a27cf75438" class="">Observer Design Pattern</h3><ul id="16ffa1d8-a916-4a63-a333-e097cf7a5d40" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Observer</span></strong>: Gözlemci, izelyici anlamlarına gelmektedir.</li></ul><ul id="37b9682d-69b0-4408-b76e-51f8cba670a2" class="bulleted-list"><li style="list-style-type:disc">Bilinen diğer isimleri: <span style="border-bottom:0.05em solid">Dependents:bağımlılar,</span> <span style="border-bottom:0.05em solid">Publish-Subscribe:</span> Yayınla-Abonel ol</li></ul><ul id="405d9ca8-d43a-4617-b54e-143025d1d9b7" class="bulleted-list"><li style="list-style-type:disc">Nesne davranışsaldır.</li></ul><ul id="2609669b-b503-4321-95cf-4fcf6a50a606" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Amaç:</span></strong> Nesneler arasında birden-çoka ( one-to-many ) bağımlılık tanımla ve bir nesne durum değiştirdiğinde bağımlı olanların otomatik güncellenmesini sağlamaktır. ( Bildirim yapıları vs olabilir. )</li></ul><p id="e32285fd-db62-4d23-ae4b-a4ec006234aa" class=""><mark class="highlight-blue"><span style="border-bottom:0.05em solid">Observer Design Pattern UML diyagramı:</span></mark></p><figure id="345c505b-8a6d-4298-a076-c175b39043d3" class="image"><a href="https://github.com/1omerozturk/Design-Patterns/blob/main/images/observer.png?raw=true"><img src="https://github.com/1omerozturk/Design-Patterns/blob/main/images/observer.png?raw=true"/></a></figure><p id="e5d2a153-0bc4-421b-bc79-dc401288a8fb" class=""><mark class="highlight-purple"><span style="border-bottom:0.05em solid">Observer tasarım deseni dört ana bileşenden oluşur:</span></mark></p><ol type="1" id="20bb1adc-f6fa-4490-8043-094736916f37" class="numbered-list" start="1"><li><strong>Subject (Konu)</strong>: Gözlemlenen nesnedir. Bir dizi gözlemciyi (observers) tutar ve durumu değiştiğinde onları bilgilendirir.</li></ol><ol type="1" id="8ea1c86f-4e0d-459c-b9ea-1f39a766b1e4" class="numbered-list" start="2"><li><strong>Observer (Gözlemci)</strong>: Subject&#x27;in durumundaki değişiklikler hakkında bilgilendirilen nesnedir.</li></ol><ol type="1" id="7be47ef0-b133-492d-adf4-e87d440b7515" class="numbered-list" start="3"><li><strong>ConcreteSubject (Somut Konu)</strong>: Subject arayüzünü uygular ve durumu saklar. ConcreteObserver nesnelerine bildirimler gönderir.</li></ol><ol type="1" id="e71bbbed-4818-4e81-afd8-5fe66531f28f" class="numbered-list" start="4"><li><strong>ConcreteObserver (Somut Gözlemci)</strong>: Observer arayüzünü uygular ve Subject&#x27;in durumunu senkronize eder.</li></ol><p id="fbd2d121-95e4-4d87-8f82-5348af8466c5" class=""><mark class="highlight-teal"><span style="border-bottom:0.05em solid">UML Diyagramı Açıklaması</span></mark></p><ul id="8674e79f-dc44-4fae-b57f-e6212d12efbc" class="bulleted-list"><li style="list-style-type:disc"><strong>Subject</strong>: Observer nesnelerini ekleme (<code>Attach</code>), çıkarma (<code>Detach</code>), ve bilgilendirme (<code>Notify</code>) işlevlerini tanımlar.</li></ul><ul id="f19e7a81-cd01-4e9a-adb0-be7358c8995d" class="bulleted-list"><li style="list-style-type:disc"><strong>Observer</strong>: Subject&#x27;in durum değişiklikleri hakkında bilgi almak için <code>Update</code> işlevini tanımlar.</li></ul><ul id="f6d54351-c1d1-45bb-a28e-de72c120747f" class="bulleted-list"><li style="list-style-type:disc"><strong>ConcreteSubject</strong>: Subject arayüzünü uygular ve durumu saklar. <code>GetState</code> işlevi ile durumu döner.</li></ul><ul id="0ea18652-0913-48d1-b35a-893e08b7616f" class="bulleted-list"><li style="list-style-type:disc"><strong>ConcreteObserver</strong>: Observer arayüzünü uygular ve Subject&#x27;in durumunu senkronize eder. <code>Update</code> işlevi ile Subject&#x27;ten güncellenmiş durumu alır.</li></ul><p id="2f0c273f-7850-4ff4-8ad6-6ccc8b578608" class="">🔑 Observer design pattern örneğine aşağıdaki <mark class="highlight-yellow_background"><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Observer">linkten</a></mark><mark class="highlight-default"> </mark>ulaşabilirsiniz:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="4c59d4d6-6a72-4271-8369-80b4aeefb81e" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">https://github.com/1omerozturk/Design-Patterns/tree/main/Observer</code></pre><figure id="1717140c-1292-41d8-b0e9-f58cc2334422"><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Observer" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Design-Patterns/Observer at main · 1omerozturk/Design-Patterns</div><div class="bookmark-description">Contribute to 1omerozturk/Design-Patterns development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/1omerozturk/Design-Patterns/tree/main/Observer</div></div><img src="https://opengraph.githubassets.com/fb52083f049bb1503987c782dc3e42f245d6975688a8c52d7bc27ea89dfad18a/1omerozturk/Design-Patterns" class="bookmark-image"/></a></figure><hr id="617ee7cd-053a-47f5-9ab2-1f4bdb55883f"/><hr id="dd0bf4b9-bf04-4cbc-93ce-ed22d550a045"/><h3 id="44a2f687-1aad-418d-b4bd-5f49384f9a90" class="">Proxy Design Pattern</h3><ul id="548e1509-d925-4aa8-9b5c-af61ecc72f89" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Proxy</span></strong>: Vekil anlamına gelmektedir.</li></ul><ul id="876d8753-1a81-4726-b86e-46dbaf47a9e7" class="bulleted-list"><li style="list-style-type:disc">Bilinen diğer isimleri: Surrogate</li></ul><ul id="d815177e-734b-4850-b239-0df01efa7d2a" class="bulleted-list"><li style="list-style-type:disc">Nesne yapısaldır.</li></ul><ul id="1e2d4e60-5814-4254-abe6-1dacede8d70c" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Amaç:</span></strong> Bir nesneye erişim kontrol etmek için o nesneye bir vekil nesne sağlamak.</li></ul><ul id="a3133a7c-4287-4582-8e1a-0d0b47bf1e66" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-orange">Proxy Design Pattern</mark> ⇒ <em><strong><span style="border-bottom:0.05em solid">Uzak Vekil</span></strong></em><em>, </em><em><strong><span style="border-bottom:0.05em solid">Sanal Vekil</span></strong></em><em><span style="border-bottom:0.05em solid">,</span></em><em><strong> </strong></em><em><strong><span style="border-bottom:0.05em solid">Koruyucu Vekil</span></strong></em>, <em><strong><span style="border-bottom:0.05em solid">Akıllı Referans</span></strong></em>. </li></ul><p id="0d74639d-ab11-4c87-a478-b56152236225" class=""><mark class="highlight-blue"><span style="border-bottom:0.05em solid">Proxy Design Pattern UML diyagramı:</span></mark></p><figure id="4e9dc90a-d8a7-46cf-bc9f-ffeea8d0de94" class="image"><a href="https://github.com/1omerozturk/Design-Patterns/blob/main/images/proxy.png?raw=true"><img src="https://github.com/1omerozturk/Design-Patterns/blob/main/images/proxy.png?raw=true"/></a></figure><p id="07ace983-e471-4ad1-9932-300b771a8f17" class=""><mark class="highlight-purple"><span style="border-bottom:0.05em solid">Proxy deseninde üç ana bileşen bulunur:</span></mark></p><ol type="1" id="a91fb6e0-404d-4f50-8c74-32ce469e866c" class="numbered-list" start="1"><li><strong>Subject</strong>: Gerçek nesne ile proxy nesnesi arasındaki ortak arayüzdür.</li></ol><ol type="1" id="da9886d2-7c3c-434c-aa2f-65154dbd8de1" class="numbered-list" start="2"><li><strong>RealSubject</strong>: Asıl işlevselliği gerçekleştiren gerçek nesnedir.</li></ol><ol type="1" id="ba263134-393c-4019-a626-ee0b3a2e0a18" class="numbered-list" start="3"><li><strong>Proxy</strong>: Gerçek nesneye erişimi kontrol eden aracı nesnedir. RealSubject nesnesine referans tutar ve onun işlevselliğini çağırır.</li></ol><p id="b2609edb-163d-4b31-9031-b99f44024faf" class=""><mark class="highlight-red"><strong><span style="border-bottom:0.05em solid">UML Diyagramı Açıklaması</span></strong></mark></p><ul id="dfb03499-53b0-4c80-b7fd-fcf490cc3586" class="bulleted-list"><li style="list-style-type:disc"><strong>Client</strong>: Subject arayüzünü kullanarak Proxy veya RealSubject nesnesine istekte bulunur.</li></ul><ul id="5f16d267-e4bf-4a70-a676-07584b1156a4" class="bulleted-list"><li style="list-style-type:disc"><strong>Subject</strong>: Ortak bir arayüzdür ve <code>Request</code> metodunu tanımlar.</li></ul><ul id="93c87c82-10c9-4f2c-bfa2-ff0bc672768e" class="bulleted-list"><li style="list-style-type:disc"><strong>RealSubject</strong>: Subject arayüzünü uygular ve asıl işlevselliği gerçekleştiren nesnedir.</li></ul><ul id="b7d7b846-f23d-42b0-aea1-076e91b78548" class="bulleted-list"><li style="list-style-type:disc"><strong>Proxy</strong>: Subject arayüzünü uygular, RealSubject nesnesine bir referans tutar ve onun işlevselliğini kontrol eder.</li></ul><p id="fc23eee3-3174-4848-998b-71102b2d28ac" class=""><mark class="highlight-teal"><span style="border-bottom:0.05em solid">Proxy Design pattern günlük hayat örneği:</span></mark></p><p id="c7110221-acc0-4781-94a3-f704246b7eda" class="">Proxy tasarım deseni için güncel hayat örneği olarak &quot;<em><strong>banka hesabına erişim</strong></em>&quot; senaryosunu ele alalım. Banka hesabı gerçek nesne (RealSubject), müşteri temsilcisi <span style="border-bottom:0.05em solid">proxy</span>, ve müşteri ise <span style="border-bottom:0.05em solid">client </span>olarak düşünülebilir. Müşteri, müşteri temsilcisine (proxy) ulaşarak banka hesabındaki işlemleri gerçekleştirmek ister. Müşteri temsilcisi, müşterinin kimliğini doğrular ve uygun olduğu takdirde işlemi gerçekleştirmek için banka hesabına erişim sağlar.</p><p id="b8c5b898-bd99-4620-b0a7-ea684b11ff79" class="">
+</p><p id="8cfdc29b-66cf-497a-80d1-f540241c465a" class="">🔑 Proxy design pattern örneğine aşağıdaki <mark class="highlight-yellow_background"><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Observer">linkten</a></mark><mark class="highlight-default"> </mark>ulaşabilirsiniz:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="89c75450-6fb7-4648-a258-fc86605e9ecd" class="code"><code class="language-Shell" style="white-space:pre-wrap;word-break:break-all">https://github.com/1omerozturk/Design-Patterns/tree/main/Proxy</code></pre><figure id="e8bdcd4f-1f74-41ff-95d7-c0cf38e963c9"><a href="https://github.com/1omerozturk/Design-Patterns/tree/main/Proxy" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Design-Patterns/Proxy at main · 1omerozturk/Design-Patterns</div><div class="bookmark-description">Contribute to 1omerozturk/Design-Patterns development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/1omerozturk/Design-Patterns/tree/main/Proxy</div></div><img src="https://opengraph.githubassets.com/79a9bdee83c04a57366f7d08464212de735816377a966a3161728c91b718173d/1omerozturk/Design-Patterns" class="bookmark-image"/></a></figure><hr id="2f0131d1-4339-495a-8868-1a1adcf2f8f0"/><hr id="52b98ba1-5e0c-42d3-bf5e-09cc95338f84"/><p id="dbe1a0be-b792-41e1-ae21-674476d28b63" class="">
+</p><p id="4fd3d827-d731-4512-9a1c-ce00b4bfd1b6" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

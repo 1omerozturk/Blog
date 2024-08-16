@@ -304,6 +304,18 @@ footer a:not(.nav-link) {
 .text-uppercase {
   letter-spacing: 0.05em;
 }
+#blogcontent{
+  height: 500px;
+
+}
+
+iframe{
+  overflow: hidden; /* Genel overflow'u gizler */
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
 
 .hover-effect {
   transition: transform .18s ease-in-out;
