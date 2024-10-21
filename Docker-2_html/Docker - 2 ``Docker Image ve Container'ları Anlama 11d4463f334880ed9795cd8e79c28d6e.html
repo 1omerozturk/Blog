@@ -1,0 +1,715 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Docker - 2: ``Docker Image ve Container&#x27;ları Anlamak”</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="11d4463f-3348-80ed-9795-cd8e79c28d6e" class="page sans"><header><img class="page-cover-image" src="2.png" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><img class="icon" src="Docker.png"/></div><h1 class="page-title">Docker - 2: ``Docker Image ve Container&#x27;ları Anlamak”</h1><p class="page-description"></p></header><div class="page-body"><h2 id="11d4463f-3348-80df-9751-d8aa459a0288" class="">2.1 Docker Image</h2><p id="11d4463f-3348-8036-a75f-eae493d0a65d" class="">Docker Image, bir uygulamanın çalışması için gerekli tüm dosyaların, kütüphanelerin ve bağımlılıkların tek bir paket halinde toplandığı, okunabilir ancak değiştirilemez (read-only) bir şablondur. Bu sayede, bir uygulama ve tüm bileşenleri, farklı ortamlarda (geliştirme, üretim, test vb.) aynı şekilde çalışıtırılabilir.</p><p id="11d4463f-3348-8014-ab9b-f9fa45d6ff76" class="">
+</p><h3 id="11d4463f-3348-80b5-a2d6-ed9d01b50109" class=""><mark class="highlight-brown"><strong><span style="border-bottom:0.05em solid">Katmanlı Yapı:</span></strong></mark><mark class="highlight-brown"> </mark></h3><figure id="11d4463f-3348-802f-bd38-ea8056b89815" class="image"><a href="https://images.unsplash.com/photo-1526073733167-1b6d55175336?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"><img style="width:192px" src="https://images.unsplash.com/photo-1526073733167-1b6d55175336?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"/></a></figure><p id="11d4463f-3348-809d-8a23-e13e65bdedc7" class=""><mark class="highlight-default">Docker image’ler, birbiri üzerine eklenen katmanlardan (layer) oluşur. Her katman, bir önceki katmana göre yapılan değişiklikleri temsil eder. Bu katmanlı yapı </mark><mark class="highlight-default"><strong><span style="border-bottom:0.05em solid">image’lerin</span></strong></mark><mark class="highlight-default"> daha hızlı oluşturulmasını ve daha az yer kaplamasını sağlar. </mark></p><p id="11d4463f-3348-8039-98ee-f4351877a91f" class=""><mark class="highlight-default_background"><span style="border-bottom:0.05em solid">Örneğin;</span></mark></p><ul id="11d4463f-3348-80a9-a0ea-d054564b3735" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-blue"><strong>Base image Layer:</strong></mark></em> Temel işletim sistemi (Ubuntu, CentOS vb.) içeren ilk katmandır.</li></ul><ul id="11d4463f-3348-8026-91ab-dbbc98e13891" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-blue"><strong>Intermediate Layers:</strong></mark></em> Uygulamaya özel yazılımların, kütüphanlerin ve konfigürasyonların eklendiği katmanlardır.</li></ul><ul id="11d4463f-3348-8038-8a64-e224f87815b7" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-blue"><strong>Top Layer:</strong></mark></em> Son katman, çalıştırılabilir dosyaları ve uygulamanın giriş noktasını içerir.</li></ul><p id="11d4463f-3348-800f-9987-d82cac40a481" class="">Bu katmanlı  yapı sayesinde, bir Image’de yapılan küçük bir değişiklik için tüm image’in tekrar oluşturulmasına gerek kalmaz. Sadece değişen katman yeniden oluşturulur ve diğer katmanlar üzerine eklenir.</p><p id="11d4463f-3348-8062-bb1f-c216149afd78" class="">
+</p><h3 id="11d4463f-3348-803e-8a62-de3b3fb9b0fb" class=""><mark class="highlight-brown"><strong><span style="border-bottom:0.05em solid">Read-Only Özelliği:</span></strong></mark></h3><figure id="11d4463f-3348-8080-828f-fbeae8876a61" class="image"><a href="https://images.unsplash.com/photo-1602503874881-c97c18856ae6?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"><img style="width:240px" src="https://images.unsplash.com/photo-1602503874881-c97c18856ae6?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"/></a></figure><p id="11d4463f-3348-803f-8035-efd3f3beda27" class="">Docker Image’leri read-only olması, Image’lerin değiştirilmesini ve bozulmasını önler. Bu sayede image’ler güvenli bir şekilde depolanabilir ve dağıtılabilir. Bir image’i çalıştırmak için, image’den bir container oluşturulur. Container, image’in bir kopyasıdır ve üzeirnde değişklikler yapılabilir. Ancak , container üzerinde yapılan değişiklikler, image’i etkilemez.</p><p id="11d4463f-3348-8053-b515-f0c6ce882110" class=""><mark class="highlight-default_background"><span style="border-bottom:0.05em solid">Örneğin;</span></mark></p><ul id="11d4463f-3348-801f-a9d3-c72a8440b8a7" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-blue">Base image:</mark></em> Ubuntu 20.04</li></ul><ul id="11d4463f-3348-80a8-b4cf-d96cf1d406ca" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-blue">Image 1:</mark></em> Nginx web sunucusu</li></ul><ul id="11d4463f-3348-8065-9ba6-cd26cc124906" class="bulleted-list"><li style="list-style-type:disc"><em><mark class="highlight-blue">Image 2:</mark></em> PHP uygulaması</li></ul><p id="11d4463f-3348-8028-9a80-d840b8d399bc" class="">Bu üç image’i birleştirerek, PHP uygulamasının Nginx ile çalışan bir web sunucusu üzerinde çalıştırılabileceği bir image oluşturabilir.</p><p id="11d4463f-3348-8001-8874-f2b260e5ae64" class="">
+</p><p id="11d4463f-3348-80c4-91ab-d7748fcf50e5" class="">
+</p><h3 id="11d4463f-3348-8023-ad5e-eacce997137f" class=""><mark class="highlight-brown"><strong><span style="border-bottom:0.05em solid">Union File System’in Çalışma Mantığı:</span></strong></mark></h3><figure id="11d4463f-3348-801a-ba25-e839c920cfa8" class="image"><a href="https://images.unsplash.com/photo-1461360228754-6e81c478b882?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"><img style="width:240px" src="https://images.unsplash.com/photo-1461360228754-6e81c478b882?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"/></a></figure><ol type="1" id="11d4463f-3348-805f-adff-fdefe184015f" class="numbered-list" start="1"><li>Farklı image’lerin katmanları, bir dosya sistemi hiyerarşisi içinde birleştirilir.</li></ol><ol type="1" id="11d4463f-3348-80ed-bc20-d5f6f90af844" class="numbered-list" start="2"><li>En üstteki katman, en son yapılan değişiklikleri içerir.</li></ol><ol type="1" id="11d4463f-3348-806c-942a-c8450940be96" class="numbered-list" start="3"><li>Alttaki katmanlar,  daha önceki değişiklikleri içerir.</li></ol><ol type="1" id="11d4463f-3348-8031-a554-e71378df8095" class="numbered-list" start="4"><li>Bir dosya ve dizin istendiğinde, sistem önce en üstteki katmanda arar. Bulunmaması durumunda alt katmanlarda aramaya devam eder.</li></ol><ul id="11d4463f-3348-80fa-9f5e-df70d1441cf4" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Avantajları:</span></strong><ul id="11d4463f-3348-80e6-a255-ff4f2f8aac81" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-teal">Hız ve Verimlilik:</mark> Sadece değişen katmanlar disk üzerinde tutulur.</li></ul><ul id="11d4463f-3348-80d1-b30e-e980f7a56a29" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-teal">Esneklik:</mark> Farklı image’lerin birleştirilerek yeni image’ler oluşturulabilir.</li></ul><ul id="11d4463f-3348-8073-8bba-eadcc346bc01" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-teal">Güvenlik:</mark> Image’ler read-only olduğu için, istenmeyen değişiklikler önelenir.</li></ul><ul id="11d4463f-3348-8043-a0d6-fccbe8ddc155" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-teal">Paylaşılabilirlik:</mark> Image’ler, Docker registry’lerde depolanarak diğer kullanıcılarla paylaşılabilir.</li></ul></li></ul><p id="11d4463f-3348-8070-a847-ca44c70f644b" class="">Sonuç olarak, Docker Image’ler, uygulamaların geliştirilmesi, dağıtılması ve yönetilmesi için güçlü bir araçtır. Katmanlı yapı, read-only özelliği ve Union File System gibi özellikler sayesinde, Docker image’ler, modern yazılım geliştirme süreçlerinde vazgeçilmez bir hale gelmiştir.</p><p id="11d4463f-3348-8097-940c-f03a613e1927" class="">
+</p><h2 id="11d4463f-3348-80c0-983c-d30763fc0de7" class="">2.2 Docker Hub ve Image Yönetimi</h2><figure id="11d4463f-3348-8062-a8de-d42e026fc2f2" class="image"><a href="https://images.unsplash.com/photo-1523841589119-b55aee0f66e7?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"><img style="width:240px" src="https://images.unsplash.com/photo-1523841589119-b55aee0f66e7?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"/></a></figure><p id="11d4463f-3348-8058-ad93-d849838ac1c8" class=""><strong><span style="border-bottom:0.05em solid">Docker Hub</span></strong>, dünyanın en büyük konteyner image deposudur. Burada milyonlarca önceden oluşturulmuş image’leri bulabilir, kendi image’larınızı depolayabilir ve diğer geliştiricilerle paylaşabilirsiniz. Tıpkı Github’ın yazılım projeleri için olduğu gibi, Docker Hub da container dünyasının merkezidi.</p><h3 id="11d4463f-3348-8038-9773-f6c7dc1cbf1f" class="">2.2.1 Docker Hub’dan Image İndirme - (docker pull)</h3><figure id="11d4463f-3348-8056-8633-fe1baef67e99" class="image"><a href="https://images.unsplash.com/photo-1541742425281-c1d3fc8aff96?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"><img style="width:240px" src="https://images.unsplash.com/photo-1541742425281-c1d3fc8aff96?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"/></a></figure><p id="11d4463f-3348-801f-80fc-f9758f67e118" class="">Bir image’i Docker Hub’dan indirmek için<code> </code><mark class="highlight-teal"><code><strong>docker pull</strong></code></mark> komutu kullanılır.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="11d4463f-3348-80f8-a79f-d06326874c71" class="code"><code class="language-Bash">docker pull &lt;image_name&gt;:&lt;tag&gt;</code></pre><ul id="11d4463f-3348-8042-b868-c3d9332a534c" class="toggle"><li><details open=""><summary><mark class="highlight-yellow">&lt;image_name&gt;</mark></summary><p id="11d4463f-3348-8086-b1fc-d8029a16b8db" class="">İndirmek istediğimiz image’in adı.</p><p id="11d4463f-3348-80b8-9291-d961ea54a17f" class="">Örneğin; (ubuntu, nginx, python).</p></details></li></ul><ul id="11d4463f-3348-809d-b70f-fd90022c1ce1" class="toggle"><li><details open=""><summary><mark class="highlight-yellow">&lt;tag&gt;</mark></summary><p id="11d4463f-3348-8077-9ef0-f6391e0d5b8b" class="">Image’in sürümünü belirten etiket veya sürüm adı.</p><p id="11d4463f-3348-809c-82b2-d3ad6c664eb2" class="">Örneğin; (latest, 20.04, 3.9).</p></details></li></ul><p id="11d4463f-3348-80ff-b0df-d4710fb52a8b" class="">
+</p><blockquote id="11d4463f-3348-802c-b84d-d309fd613d91" class="">Örnek</blockquote><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="11d4463f-3348-8018-b916-f3732c121f26" class="code"><code class="language-Bash">docker pull ubuntu:20.04</code></pre><ul id="11d4463f-3348-801a-81e8-dfa6b2afc5e5" class="bulleted-list"><li style="list-style-type:disc">Bu komut, Ubuntu 20.04 işletim sistemini içeren bir image indirir.</li></ul><p id="11d4463f-3348-8069-8f86-e3244e1d42bc" class="">
+</p><h3 id="11d4463f-3348-8075-9faa-ea2e57d54dec" class="">2.2.2 Docker Hub’a Kendi Image’imizi Push Etme - (docker-push)</h3><figure id="11d4463f-3348-806d-8e08-e9a380a01c0a" class="image"><a href="https://images.unsplash.com/photo-1632298095711-d546888879ee?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"><img style="width:240px" src="https://images.unsplash.com/photo-1632298095711-d546888879ee?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"/></a></figure><p id="11d4463f-3348-80f5-ac0f-f0e64a50f5a6" class="">Kendi oluşturduğumuz bir image’i <a href="https://www.docker.com/products/docker-hub/">Docker Hub</a>’a yüklemek için <mark class="highlight-teal"><code><strong>docker push</strong></code></mark><strong> </strong>komutunu kullanırız.</p><p id="11d4463f-3348-806f-8e40-c0731007c5a2" class="">Docker hesabınızın olduğunu varsayarak bir repository oluşturmanız gerekir.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="11d4463f-3348-80e3-9a74-e11613be4065" class="code"><code class="language-Bash">docker push &lt;user_name&gt;/&lt;repository&gt;:&lt;tag&gt;</code></pre><ul id="11d4463f-3348-8052-b8fd-c06cddafe3a6" class="toggle"><li><details open=""><summary><mark class="highlight-yellow">&lt;user_name&gt;</mark></summary><p id="11d4463f-3348-80e1-abfe-cd1a7884053b" class="">Docker Hub kullanıcı adınız.</p></details></li></ul><ul id="11d4463f-3348-8023-805e-fbe642e1f314" class="toggle"><li><details open=""><summary><mark class="highlight-yellow">&lt;repository&gt;</mark></summary><p id="11d4463f-3348-8046-a6ee-d59479893780" class="">Oluşturduğunuz respository’nin adı.</p></details></li></ul><ul id="11d4463f-3348-8005-abea-d89641eb0aab" class="toggle"><li><details open=""><summary><mark class="highlight-yellow">&lt;tag&gt;</mark></summary><p id="11d4463f-3348-80af-ba5a-ef52e76aa61e" class="">Image’in sürümünü belirten etiket.</p></details></li></ul><p id="11d4463f-3348-802d-b95c-f2ba567b4906" class="">
+</p><blockquote id="11d4463f-3348-80c8-8066-f9d884074d95" class="">Örnek</blockquote><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="11d4463f-3348-8034-88c5-c3adb0b4f241" class="code"><code class="language-Bash">docker push myuser/myimage:v1</code></pre><ul id="11d4463f-3348-807c-b28e-d7600b7c506b" class="bulleted-list"><li style="list-style-type:disc">Bu komut “myuser” adlı kullanıcının “myimage” adlı repository’sine “V1” etiketli bir image yükler.</li></ul><p id="11d4463f-3348-80e3-bb44-dbe6548ddd12" class=""><mark class="highlight-red_background">Not:</mark> Docker Hub’a image push etmek için yerel makinenizdeki image’in adı ile Docker Hub’daki repository adı ve etiketi aynı olmalıdır.</p><p id="11d4463f-3348-808d-9114-dfef66e8d454" class="">
+</p><h3 id="11d4463f-3348-80fe-9476-ff85e748e72c" class="">2.2.3 Özel Image Repository’lerinin Kullanımı ve Yönetimi</h3><p id="11d4463f-3348-80a6-88bc-c636ea18491c" class="">Docker Hub dışında da özel image repository’leri oluşturabilirsiniz. Bu, kurumsal ortamlarda veya daha fazla kontrol isteyen durumlarda tercih edilir. Bazı popüler özel registry’ler arasında <em><strong><span style="border-bottom:0.05em solid">Google Contaier Registry</span></strong></em>, <em><strong><span style="border-bottom:0.05em solid">Amazon ECR</span></strong></em> ve <em><strong><span style="border-bottom:0.05em solid">Azure Container Registry</span></strong></em> bulunur.</p><p id="11d4463f-3348-8052-a8e7-fa3b2fd14952" class="">
+</p><p id="11d4463f-3348-80dd-96bc-d2a3576cc0ea" class=""><strong><span style="border-bottom:0.05em solid">Özel registry’lerin avantajları:</span></strong></p><ul id="11d4463f-3348-80d5-8cf4-fb16608e4d74" class="toggle"><li><details open=""><summary><mark class="highlight-teal">Güvenlik:</mark></summary><p id="11d4463f-3348-8051-9ad0-e31c49bcd981" class="">Kurumsal ağınız içinde daha iyi kontrol ve güvenlik sağlar.</p></details></li></ul><ul id="11d4463f-3348-80c7-b409-fafd1d447cb9" class="toggle"><li><details open=""><summary><mark class="highlight-teal">Özelleştirme:</mark></summary><p id="11d4463f-3348-802e-bf58-c1560374fa6e" class="">Kendi ihitiyaçlarınıza göre özelleştirebilirsiniz.</p><p id="11d4463f-3348-8031-876d-d31d90fa8739" class="">Örneğin; kimlik doğrulama, erişim kontrolü</p></details></li></ul><ul id="11d4463f-3348-80c9-b4d1-d0b60f07d764" class="toggle"><li><details open=""><summary><mark class="highlight-teal">Ölçeklenebilirlik:</mark></summary><p id="11d4463f-3348-8044-8d07-dbdd9a5070fa" class="">Büyük ölçekli prtojeler için daha iyi ölçeklenebilirlik sunar.</p></details></li></ul><p id="11d4463f-3348-80b1-ae33-d343548f3b26" class="">
+</p><p id="11d4463f-3348-80d3-bfd0-c1b1e1037b1a" class="">Özel Registry Kullanımı:</p><ol type="1" id="11d4463f-3348-80f5-b475-e4560340ab57" class="numbered-list" start="1"><li>Registry’i yapılandırma: Registry’i kurmak veya bulut sağlayıcının sunduğu hizmeti kullanmak.</li></ol><ol type="1" id="11d4463f-3348-80db-8e5e-d7caf28c2be1" class="numbered-list" start="2"><li>Kimlik doğrulama: Registry’e erişmek için doğru kimlik bilgilerini kulalnmak.</li></ol><ol type="1" id="11d4463f-3348-8091-a563-d73a93bd57ff" class="numbered-list" start="3"><li>Image push/pull: <mark class="highlight-purple"><code><strong>docker push</strong></code></mark>  ve <mark class="highlight-purple"><code><strong>docker pull</strong></code></mark> komutlarını kullanarak image’leri göndermek ve almak.</li></ol><p id="11d4463f-3348-806b-8f94-c9ee99ca4edf" class=""> </p><blockquote id="11d4463f-3348-8015-8456-db9653c92b1a" class="">Örnek</blockquote><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="11d4463f-3348-803e-bb84-cb5316e843ff" class="code"><code class="language-Bash"># Docker&#x27;ı Google Cloud ile bağlama
+gcloud auth configure-docker
+
+# Image push
+docker tag myimage gcr.io/&lt;project_id&gt;/myimage:v1
+docker push gcr.io/&lt;proje_id&gt;/myimage:v1</code></pre><p id="11d4463f-3348-801b-8676-cd4f3f5d2912" class="">
+</p><p id="11d4463f-3348-8040-b591-cb1a16c9c54c" class="">Docker Hub, container image’lerı için merkezi bir depolama ve paylaşım platformudur. Kendi image’larınızı oluşturabilir, Docker Hub’dan başkalarının oluşturduğu image’ları indirebilir ve özel registry’ler kullanarak daha fazla kontrol ve güvenlik sağlayabilirsiniz.</p><p id="11d4463f-3348-804e-888f-f022de4a3f79" class="">
+</p><h2 id="11d4463f-3348-800b-8fcf-eff1f5d1264b" class="">2.3 Docker Container</h2><figure id="11d4463f-3348-80cc-adf9-e356d4ae25dd" class="image"><a href="https://images.unsplash.com/photo-1493946740644-2d8a1f1a6aff?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"><img style="width:240px" src="https://images.unsplash.com/photo-1493946740644-2d8a1f1a6aff?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"/></a></figure><p id="11d4463f-3348-8071-b83c-e53049eb429e" class="">Tekrar hatırlatmak gerekirse Docker Container, bir uygulamanın ve tüm bağımlılıklarının (kütüphaneler, konfigürasyonlar vb.) paketlenmiş bir halidir. Bu paket, herhangi bir altyapıda tutarlı bir şekilde çalıştırılabilen, hafif ve izole edilmiş bir ortam sağlar. Container’ler, sanal makinelere göre daha hızlı başlatılır, daha az kaynak tüketir ve daha kolay yönetilir.</p><h3 id="11d4463f-3348-809c-b682-e29c38f7e2c6" class="">2.3.1 Container ve Image İlişkisi</h3><ul id="11d4463f-3348-8097-860b-dc4dac011d23" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Image:</span></strong> Bir container’ın şablonu gibidir. Okunabilir ve değiştirilemez bir dosyadır. Bir image, bir işletim sisteminin temel katmanları,  uygulamaları ve konfigürasyonları içerir.</li></ul><ul id="11d4463f-3348-80f1-9f0b-cf200c11c7af" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Container:</span></strong> Bir image’dan oluşturulan çalıştırılabilir bir örnektir. Image’deki talimatlara göre başlatılır ve çalışır. Birçok container, aynı image’dan oluşturulabilir.</li></ul><blockquote id="11d4463f-3348-800f-951e-c833e44ddfc9" class="">Örnek</blockquote><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="11d4463f-3348-8062-8616-cf204c443499"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%"><p id="75182a5e-35e2-4bd2-aa6c-8db0b3e9fdba" class="">Bir Ubuntu işletim sistemine sahip ve üzerinde Nginx web sunucusunun kurulu olduğu bir image düşünelim. Bu image’dan birden fazla container oluşturulabiliriz. Her container, aynı image’dan gelmesine rağmen farklı bir IP adresine sahip olabilir ve farklı konfigürasyonlarla çalışabilir.</p></div></figure><p id="11d4463f-3348-8089-a87a-fe97043fc913" class="">
+</p><h3 id="11d4463f-3348-8039-a7cc-f403e2d6a6f9" class="">2.3.2 Container’ların İzole Edilmesi</h3><p id="11d4463f-3348-8078-afce-f61a8cedd409" class="">Container’ler birbirlerinden ve ana makineden izole edilerek güvenlik ve kanyak paylaşımı konularında avantaj sağlar. Bu izolasyon, <strong><span style="border-bottom:0.05em solid">namespace</span></strong> ve <strong><span style="border-bottom:0.05em solid">cgrups</span></strong> mekanizmalarıyla sağlanır.</p><ul id="11d4463f-3348-807f-9177-c6057dab02ff" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><strong>Namespace</strong></mark></summary><p id="11d4463f-3348-8038-a2ea-d3893d53bcb9" class="">Bir container’ın görebileceği ve erişebileceği kaynakları sınırlar. Her container, kendi ağ, PID (Procces ID), mount noktaları, kullanıcı ve diğer namespace’lere sahiptir. Bu sayede, bir container’da meydana gelen bir hata diğer container’ları etkilemez.</p></details></li></ul><ul id="11d4463f-3348-80b2-8c79-edd4cc28e57d" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><strong>Cgroups</strong></mark></summary><p id="11d4463f-3348-80d3-97da-edfe8a81cbf4" class="">Bir container’ın kullanabileceği sistem kaynaklarını (CPU, bellek, disk, ağ) sınırlar ve izler.</p><p id="11d4463f-3348-80c0-93d7-e92da5d3839f" class="">Bu sayede, bir container diğer container’ların kaynaklarını tüketemez ve sistem kaynakları daha etkin bir şekilde kullanılır.</p></details></li></ul><p id="11d4463f-3348-80b3-bb69-c1c51db6ef0d" class="">
+</p><p id="11d4463f-3348-80f0-97c6-f0859974fc2f" class=""><mark class="highlight-gray"><strong><span style="border-bottom:0.05em solid">Özetle</span></strong></mark></p><ul id="11d4463f-3348-80c4-8a91-cb799168815c" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid">Docker Image:</span> Okunabilir, değiştirilemez ve container’ların şablonu olan bir dosyadır.</li></ul><ul id="11d4463f-3348-8042-b61e-ec9c03362ebe" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid">Docker Container:</span> Bir image’dan oluşturulan, çalıştırılabilir ve izole edilmiş bir ortam sağlar.</li></ul><ul id="11d4463f-3348-8072-b136-c362440d38ae" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid">Namespace:</span> Container’ların görebileceği ve erişebileceği kaynakları sınırlar.</li></ul><ul id="11d4463f-3348-8064-8007-f0929ebbeca8" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid">Cgroups:</span> Container’ların kullanabileceği sistem kaynaklarını sınırlar ve izler.</li></ul><p id="11d4463f-3348-80bb-a5cb-ed21370bcb7c" class="">
+</p><h3 id="11d4463f-3348-8036-b189-cda5ee5c90e6" class="">2.3.3 Docker Container Kullanım Alanları</h3><div id="11d4463f-3348-80f7-b489-f5955ca3f11a" class="column-list"><div id="b0417cb2-c4f6-4f9f-8f01-275ebdcafc8b" style="width:25%" class="column"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Mikroservis Mimarileri</summary><div class="indented"><p id="11d4463f-3348-8019-836b-ef9ba5010656" class="">Uygulamaların küçük, bağımsız hizmetlere ayırmak için.</p></div></details><p id="11d4463f-3348-80ec-a8ee-d86d589f4ac2" class="">
+</p></div><div id="00b52fb6-1041-42b7-a7a3-9dde4d87c3bc" style="width:25%" class="column"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">DevOps</summary><div class="indented"><p id="11d4463f-3348-8018-b8f9-f783067f938b" class="">CI/CD (Sürekli entegrasyon ve sürekli dağıtım) süreçlerini otomatikleştirmek için.</p></div></details><p id="11d4463f-3348-80b5-87ee-ef77aef88cdc" class="">
+</p></div><div id="db515637-ef48-40bd-9cd3-952ef8da4f05" style="width:25%" class="column"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Bulut Bilişim</summary><div class="indented"><p id="11d4463f-3348-809e-bc3a-fd075c690ed9" class="">Bulut platformlarında uygulamaları dağıtmak için.</p></div></details><p id="11d4463f-3348-8057-89d3-f1fd8c8e6270" class="">
+</p></div><div id="61c088d4-61a3-4abb-85c1-94becfae6885" style="width:25%" class="column"><details open=""><summary style="font-weight:600;font-size:1.25em;line-height:1.3;margin:0">Web Uygulamaları</summary><div class="indented"><p id="11d4463f-3348-80c8-a524-e36667ba67ad" class="">Web uygulamalarını hızlı ve güvenli bir şekilde dağıtmak için.</p></div></details></div></div><ul id="11d4463f-3348-8027-8ee2-ca8810966bc9" class="toggle"><li><details open=""><summary><strong><span style="border-bottom:0.05em solid">Ek Anahtar Kelimeler</span></strong></summary><ul id="11d4463f-3348-8040-8bef-e4d76d3c33f1" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><strong>Dockerfile:</strong></mark> Bir image’ı nasıl oluşturacağımızı tanımlayan bir dosyadır.</li></ul><ul id="11d4463f-3348-806a-891d-e9fc40d6c6a6" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><strong>Docker Compose:</strong></mark> Birden fazla container’ı yönetebilmek için kullanılan bir araçtır.</li></ul><ul id="11d4463f-3348-8013-8c26-ff1e72e4642a" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><strong>Kubernets:</strong></mark> Büyük ölçekli container orchestration platformudur.</li></ul></details></li></ul><p id="11d4463f-3348-8011-a007-db2923cb9f29" class="">
+</p><h2 id="11d4463f-3348-8092-83ec-f98f05b5b398" class="">2.4 Container Yönetim Komutları ve Yaşam Döngüsü</h2><figure id="11d4463f-3348-803e-bbce-c48d6814928f" class="image"><a href="https://images.unsplash.com/photo-1494961104209-3c223057bd26?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"><img style="width:240px" src="https://images.unsplash.com/photo-1494961104209-3c223057bd26?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"/></a></figure><h3 id="11d4463f-3348-8034-a815-d4b2f4458eca" class="">2.4.1 Temel Docker komutları</h3><figure id="11d4463f-3348-8032-b1c8-cffe18b8f83c" class="image"><a href="https://images.unsplash.com/photo-1592991538534-00972b6f59ab?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"><img style="width:240px" src="https://images.unsplash.com/photo-1592991538534-00972b6f59ab?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"/></a></figure><ul id="11d4463f-3348-80f4-80b7-e164f521c72a" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><code><strong>docker ps</strong></code></mark>  ⇒ Çalışmakta olan container’ları listeler.<ul id="11d4463f-3348-802b-b268-ed3d2306265b" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-teal"><code><strong>-a</strong></code></mark>  ⇒ tüm container’ları (çalışan, durdurulmuş, silinmiş) listelemek için kullanılır.</li></ul></li></ul><ul id="11d4463f-3348-8049-a0ed-cdfdf3039be6" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><code><strong>docker run</strong></code></mark>   ⇒ Yeni bir container oluşturur ve çalıştırır.<ul id="11d4463f-3348-8050-9865-f2ec0673efe1" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-teal"><code><strong>-d</strong></code></mark>  ⇒ Container’ı arka planda çalıştırmak için kullanılır.</li></ul><ul id="11d4463f-3348-80ab-acc2-ff0646bdf301" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-teal"><code><strong>-p</strong></code></mark>  ⇒ Container’ın portunu ana makinenin bir portuna eşlemek için kullanılır.</li></ul><ul id="11d4463f-3348-80cb-908a-f4bf4c8b903e" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-teal"><code><strong>-v</strong></code></mark>  ⇒ Ana makinenin bir dizinini container’ın bir dizinine bağlamak için kullanılr.</li></ul></li></ul><ul id="11d4463f-3348-80c0-a4c1-e1ce44c27773" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><code><strong>docker start</strong></code></mark>  ⇒ Oluşturulan bir Container’ı çalıştırır.</li></ul><ul id="11d4463f-3348-80a4-b5a3-c57466199c5b" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><code><strong>docker exec</strong></code></mark>  ⇒ Çalışan bir container’ın içinde komut çalıştırır.</li></ul><ul id="11d4463f-3348-802a-8153-e8eb0a008826" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><code><strong>docker stop</strong></code></mark>  ⇒ Çalışan bir container’ı durdurur.</li></ul><ul id="11d4463f-3348-8093-a8a9-c85bdd71359a" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><code><strong>docker rm</strong></code></mark>  ⇒ Durdurulmuş bir container’ı siler.</li></ul><p id="11d4463f-3348-80c1-b348-da8e771af35a" class="">
+</p><h3 id="11d4463f-3348-806a-bee7-e1fc586d6aa2" class=""><strong>2.4.2 Diğer Önemli Komutlar</strong></h3><figure id="11d4463f-3348-80de-a1c5-d3cc01d41f74" class="image"><a href="https://images.unsplash.com/photo-1524741978410-350ba91a70d7?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"><img style="width:240px" src="https://images.unsplash.com/photo-1524741978410-350ba91a70d7?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"/></a></figure><ul id="11d4463f-3348-8075-936c-c62fb550bb85" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><code><strong>docker images</strong></code></mark>  → Yerel olarak kaydedilmiş image’ları listeler.</li></ul><ul id="11d4463f-3348-8091-950c-d4633cdb85f6" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><code><strong>docker pull</strong></code></mark>  → Bir image’ı Docker Hub veya başka bir registry’den çeker.</li></ul><ul id="11d4463f-3348-80e8-bb1d-d15e149e0c68" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><code><strong>docker push</strong></code></mark>  → Yerel bir image’ı Docker Hub veya başka bir registry’e gönderir.</li></ul><ul id="11d4463f-3348-80c4-800d-dc61fa9e8104" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><code><strong>docker build</strong></code></mark>  → Bir Dockerfile’dan bir image oluşturur.</li></ul><ul id="11d4463f-3348-807c-adb7-f8f8c75ee8f6" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-teal"><code><strong>docker commit</strong></code></mark>  → Çalışan bir container’dan yeni bir image oluşturur.</li></ul><p id="11d4463f-3348-808b-be9d-d2e4fc7dd11a" class="">
+</p><h3 id="11d4463f-3348-804f-b56d-c8ce2523fa75" class="">2.4.3 Container Yaşam Döngüsü</h3><figure id="11d4463f-3348-80d2-b915-e555ff5fe257" class="image"><a href="https://images.unsplash.com/photo-1527266237111-a4989d028b4b?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"><img style="width:240px" src="https://images.unsplash.com/photo-1527266237111-a4989d028b4b?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"/></a></figure><ol type="1" id="11d4463f-3348-80c5-a324-ca900aabac14" class="numbered-list" start="1"><li><mark class="highlight-blue"><strong>Oluşturma: </strong></mark><mark class="highlight-teal"><code><strong>docker run</strong></code></mark><mark class="highlight-blue"><strong>  </strong></mark><mark class="highlight-default">komutu ile bir image’dan yeni container oluşturulur.</mark></li></ol><ol type="1" id="11d4463f-3348-80a1-aff9-fe398f97210a" class="numbered-list" start="2"><li><mark class="highlight-blue"><strong>Çalıştırma: </strong></mark><mark class="highlight-default">Oluşturulan container, </mark><mark class="highlight-teal"><code><strong>docker start</strong></code></mark><mark class="highlight-default">  komutu ile çalıştırılır.</mark></li></ol><ol type="1" id="11d4463f-3348-80cb-af92-da5fc3335e2d" class="numbered-list" start="3"><li><mark class="highlight-blue"><strong>Durdurma: </strong></mark><mark class="highlight-default">Çalışan bir container, </mark><mark class="highlight-purple"><code><strong>docker stop</strong></code></mark><mark class="highlight-default">  komutu ile durdurulur.</mark></li></ol><ol type="1" id="11d4463f-3348-8092-966b-decb537d75db" class="numbered-list" start="4"><li><mark class="highlight-blue"><strong>Silme: </strong></mark><mark class="highlight-default">Durdurulmuş bir container,</mark><mark class="highlight-default"><strong> </strong></mark><mark class="highlight-red"><code><strong>docker rm</strong></code></mark><mark class="highlight-default">  komutu ile silinir.</mark></li></ol><p id="11d4463f-3348-8029-bda6-efe5d242da5e" class="">
+</p><h3 id="11d4463f-3348-8059-abb2-f4daebff2aeb" class="">2.4.4 Loglara Erişim</h3><figure id="11d4463f-3348-8025-bf50-fc259717d382" class="image"><a href="https://images.unsplash.com/photo-1715079029357-1a74c8c5eae2?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"><img style="width:288px" src="https://images.unsplash.com/photo-1715079029357-1a74c8c5eae2?ixlib=rb-4.0.3&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb"/></a></figure><ul id="11d4463f-3348-80a2-a771-f361e4c4af91" class="bulleted-list"><li style="list-style-type:disc"><code><strong>docker logs</strong></code><strong> </strong> ⇒ Bir container’ın tüm loglarını görüntüler.<ul id="11d4463f-3348-803b-ba1e-d565eeab99e7" class="bulleted-list"><li style="list-style-type:circle"><code><strong>-f</strong></code><strong>  </strong>⇒ Logları gerçek zamanlı olarak takip etmek için kullanılır.</li></ul></li></ul><p id="11d4463f-3348-80db-9c1a-ed19ae30a96b" class="">
+</p><h3 id="11d4463f-3348-80dc-a78b-c57905230fb2" class="">2.4.5 Örnek Kullanımlar</h3><ul id="11d4463f-3348-80ac-ab83-c31859429c3a" class="bulleted-list"><li style="list-style-type:disc">Bir Nginx container’ı oluşturup çalıştırmak<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="11d4463f-3348-80d2-b5b2-f8a255a52841" class="code"><code class="language-Bash">docker run -d -p 80:80 nginx</code></pre></li></ul><ul id="11d4463f-3348-8052-9a13-cbf9c004170a" class="bulleted-list"><li style="list-style-type:disc">Çalışan bir container içinde bir komut çalıştırmak<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="11d4463f-3348-809a-8e2e-ff15b876b796" class="code"><code class="language-Bash">docker exec my_container bash</code></pre></li></ul><ul id="11d4463f-3348-800f-a1c5-da5ea753c6f5" class="bulleted-list"><li style="list-style-type:disc">Bir container’in loglarını görüntülemek<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="11d4463f-3348-809a-981a-de675736807d" class="code"><code class="language-Bash">docker logs -f my_container</code></pre></li></ul><p id="11d4463f-3348-80ee-9564-c135053f905a" class="">
+</p><p id="11d4463f-3348-808e-8fc6-e54d5e422054" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

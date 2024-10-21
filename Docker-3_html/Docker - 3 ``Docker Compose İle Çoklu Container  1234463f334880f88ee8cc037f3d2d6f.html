@@ -1,0 +1,813 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Docker - 3: ``Docker Compose İle Çoklu Container Yönetimi”</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1234463f-3348-80f8-8ee8-cc037f3d2d6f" class="page sans"><header><img class="page-cover-image" src="3.png" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><img class="icon" src="Docker.png"/></div><h1 class="page-title">Docker - 3: ``Docker Compose İle Çoklu Container Yönetimi”</h1><p class="page-description"></p></header><div class="page-body"><h2 id="1234463f-3348-80ef-8ef5-f6da63048c1c" class="">3.1 Docker Compose Nedir?</h2><p id="1234463f-3348-8064-9926-efe848c9c397" class="">Docker Compose, çoklu container uygulamalarını tek bir yapılandırma dosyası (genellikle <mark class="highlight-gray"><code>docker-compose.yml</code></mark> dosyası) ile yönetmemizi sağlayan bir <span style="border-bottom:0.05em solid">araçtır</span>. Docker Compose, özlellikle birbirleriyle ilişkili, birden fazla hizmete sahip uygulamaların hızlıca oluşturulması, konfigüre edilmesi ve yönetilmesini sağlar ve büyük ölçüde kolaylık sağlar. </p><h3 id="1234463f-3348-80e4-9383-d91564a328d9" class="">3.1.1 Temel Kavramlar ve Yapı Taşları</h3><ol type="1" id="1234463f-3348-800e-b28b-f073fd4c3ce8" class="numbered-list" start="1"><li><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">YAML Dosyası:</span></strong></mark><mark class="highlight-blue"><strong> </strong></mark>Docker Compose’un yapılandırma dosyası, YAML formatında yazılır ve uygulamamızın tüm bileşenlerini, bağımlılıklarını bu dosyada tanımlarsınız.</li></ol><ol type="1" id="1234463f-3348-80e9-8eee-fde7a03b682c" class="numbered-list" start="2"><li><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Hizmetler (Services):</span></strong></mark> Her bir container bir “hizmet” olarak tanımlanır. Örneğin, bir web uygulaması için ayrı bir web sunucusu, ayrı bir veritabanı hizmeti olabilir.</li></ol><ol type="1" id="1234463f-3348-8003-ab28-d265568e6532" class="numbered-list" start="3"><li><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Ağ (Network):</span></strong></mark> Hizmetler birbirleriyle izole veya özel ağlar üzerinden haberleşebilir. Compose, bu ağları ototmatik olarak yönetir. </li></ol><ol type="1" id="1234463f-3348-801b-859f-fbe256cbb9e9" class="numbered-list" start="4"><li><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Volumes (Hacimler):</span></strong></mark> Veri depolama ihtiyaçları için kalıcı hacimler tanımlayabilirsiniz. Bu sayede, container‘lar yeniden başlatıldığında veriler kaybolmaz.</li></ol><p id="1234463f-3348-809d-b980-c4ba2e3afbb8" class="">
+</p><h3 id="1234463f-3348-80cf-994e-f0ecda5adb0b" class="">3.1.2 Docker Compose Kullanmanın Temelleri</h3><ol type="1" id="1234463f-3348-80bc-8c24-d076180c5b73" class="numbered-list" start="1"><li><mark class="highlight-yellow"><strong><span style="border-bottom:0.05em solid">Kurulum:</span></strong></mark><mark class="highlight-yellow"><strong> </strong></mark>Docker Compose, Docker’ın varsayılan bir parçası olarak gelir. Eğer sistemimizde Docker yüklüyse, Docker Compose’u da kullanabilirsiniz. Komut satırında, bir Compose dosyasını çalıştırmak için <mark class="highlight-gray"><code>docker-compose up</code></mark> komutu yeterlidir.</li></ol><ol type="1" id="1234463f-3348-80dc-8897-fe25926a0028" class="numbered-list" start="2"><li><mark class="highlight-yellow"><strong><span style="border-bottom:0.05em solid">YAML Dosyası ile Tanımlama:</span></strong></mark><mark class="highlight-yellow"><strong> </strong></mark><mark class="highlight-gray"><code>docker-compose.yml</code></mark> dosyası ile birden fazla container için yapılandırma yapabiliriz. Örneğin, aşağıdaki gibi bir dosya, bir web uygulaması ve onun PostgeSQL veritabanını çalıştırabilir.<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-8018-ba73-d2f675c6077f" class="code"><code class="language-YAML">version:&#x27;3&#x27;
+services:
+	web:
+		image: my-web-app
+		ports:
+			- &quot;5000:5000&quot;
+		depends_on:
+			- db
+				
+	db:
+		image: postgres
+		environment:
+			POSTGRES_USER: username
+			POSTGRES_PASSWORD: password
+	</code></pre><p id="1234463f-3348-80d8-90cb-e491d889e2d0" class="">
+</p></li></ol><ol type="1" id="1234463f-3348-80a8-85c9-c40cf2a57c53" class="numbered-list" start="3"><li><mark class="highlight-yellow"><strong>Komutlar:</strong></mark><mark class="highlight-yellow"> </mark>Docker Compose ile uygulamayı başlatma, durdurma, güncelleme ve silme gibi işlemler kolayca yapılabilir.<ul id="1234463f-3348-80cb-8f6c-d3d515526d16" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray"><code>docker-compose up</code></mark>: Uygualamayı başlatır.</li></ul><ul id="1234463f-3348-80fb-badd-f0269d3a668e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray"><code>docker-compose down</code></mark>: Tüm hizmetleri ve ağları durdurur ve siler.</li></ul><ul id="1234463f-3348-805d-9eb2-ec8395f32274" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray"><code>docker-compose logs</code></mark>: Tüm hizmetlerin günlüklerini gösterir.</li></ul></li></ol><p id="1234463f-3348-8001-a873-e62e3dc00a5d" class="">
+</p><p id="1234463f-3348-80f9-99a4-c4a2314cb6e4" class="">Docker Compose, mikroservis mimarisi kullanan uygulamalar için de oldukça kullanışlıdır çünkü farklı hizmetleri tanımlamak ve bu hizmetlerin birbirleriyle nasıl etkileşime gireceğini belirlemek çok daha kolay hale gelir. </p><hr id="1234463f-3348-8029-8686-f8f9027a5aa6"/><h2 id="1234463f-3348-80bb-8da4-e0f7c2e4f738" class="">3.2 <mark class="highlight-gray"><code>docker-compose.yml</code></mark> Dosyasını Anlamak</h2><p id="1234463f-3348-80b2-9cb1-cc8347290ab7" class=""><mark class="highlight-gray"><code>docker-compose.yml</code></mark><mark class="highlight-gray"> </mark>dosyası, birden fazla container’ı aynı anda yönetmek için kullanılan bir yapılandırma dosyasıdır. Bu dosya YAML formatında yazılır ve container’lar arası bağımlılıklar, ağ bağlantıları, veri hacimleri gibi pek çok özelliği belirleyebilir. YML dosyası sayesinde birden fazla hizmeti (service) tek bir komutla ayağa kaldırabilir ve yönetebiliriz.</p><p id="1234463f-3348-8019-8d8a-ca7521877af4" class="">
+</p><h3 id="1234463f-3348-8075-a8ba-d0797271698a" class="">3.2.1 YAML Formatının Temelleri</h3><p id="1234463f-3348-80a1-a5a5-ca08899f656e" class="">YAML (Yet Another Markup Language), insanlar tarafından kolayca okunabilen bir veri sergileme dilidir. Girintilere dayalıdır ve anahtar-değer çiftleri ile çalışır. Docker Compose bu yapı üzerinden container’lar arasında ilişkileri tanımlar.</p><p id="1234463f-3348-8042-8d46-fa90417e05b3" class=""><mark class="highlight-gray"><code><strong>docker-compose.yml</strong></code></mark><strong><span style="border-bottom:0.05em solid">Dosyasında Temel Bileşenler</span></strong></p><ul id="1234463f-3348-8079-a0da-d25fff71e345" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><mark class="highlight-default_background"><strong>Version (Versiyon) </strong></mark></mark></summary><p id="1234463f-3348-80f0-b986-c836fa482ffe" class=""><mark class="highlight-default_background">Bu alan, YAML dosyasında hangi Docker Compose sürümüne uygun olduğunu belirtir. Genellikle en son sürüm olan </mark><mark class="highlight-default_background"><code>version: &quot;3&quot;</code></mark><mark class="highlight-default_background"> kullanılır.</mark></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-80d2-bd42-e5c3d56558c3" class="code"><code class="language-YAML">version: &#x27;3&#x27;</code></pre><p id="1234463f-3348-8097-8843-d68c87488089" class="">
+</p></details></li></ul><ul id="1234463f-3348-8050-a8bf-d33fa52dc8de" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><strong>Services (Hizmetler)</strong></mark></summary><p id="1234463f-3348-804c-b8dd-d830e3956837" class="">Uygulamalarımızda birden fazla container (hizmet) varsa, bu container’ları “services” altında tanımlarsınız. Her bir hizmet bir container’ı ifade eder.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-80f0-8e2e-d2d5871cdacf" class="code"><code class="language-YAML">services:
+	web:
+		image: my-web-app
+	db:
+		image: postgres</code></pre></details></li></ul><ul id="1234463f-3348-80dc-a50b-f75aa8786bbe" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><strong>Image (İmaj)</strong></mark></summary><p id="1234463f-3348-8074-85bb-e7c2d77f15db" class="">Hizmetin hangi Docker imajını kullanacağını tanımlayan anahtar. İmaj Docker Hub gibi bir kaynaktan çekilebilir ya da lokal olarak oluşturulabilir.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-800a-98e6-d615ebad8505" class="code"><code class="language-YAML">image: nginix</code></pre></details></li></ul><ul id="1234463f-3348-80de-a3e6-ed0e680f9eb7" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><strong>Build (Derleme)</strong></mark></summary><p id="1234463f-3348-8035-aaca-fa81e201ca60" class="">Eğer kendi Dockerfile dosyamız varsa ve container’ı bu Dockerfile’dan oluşturmak istiyorsak, <mark class="highlight-gray"><code>build</code></mark><mark class="highlight-gray"> </mark>komutunu kullanmamız gerekiyor.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-80b2-8a3d-c973ec96a35e" class="code"><code class="language-YAML">build: .</code></pre></details></li></ul><ul id="1234463f-3348-807c-8759-eacf0a0e5f6e" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><strong>Ports (Portlar)</strong></mark></summary><p id="1234463f-3348-80a2-9c8b-f7d2387f2e3c" class="">Container’ımızın dış dünya ile iletişim kurmasını sağlamak için port eşleştirmeleri yaparız. Örneğin, aşağıdaki yapılandırma 5000 numaralı dış portu container içindeki 5000 numaralı porta yönlendirir.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-803b-9aec-e05a767cb9db" class="code"><code class="language-YAML">ports:
+	- &quot;5000:5000&quot;</code></pre></details></li></ul><ul id="1234463f-3348-8095-b0c7-fc0230c5a0ff" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><strong>Volumes (Hacimler)</strong></mark></summary><p id="1234463f-3348-800c-b262-fc31db76e9f9" class="">Verilerin kalıcı olması için Docker volume’ları kullanılır. Böylece container silinse bile veriler kaybolmaz.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-802c-8ec9-fb27a478f007" class="code"><code class="language-YAML">volumes:
+	- mydata:/var/lib/mysql</code></pre></details></li></ul><ul id="1234463f-3348-801d-b20c-d3c505a64478" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><strong>Environment (Ortam Değişkenleri)</strong></mark></summary><p id="1234463f-3348-80c0-9836-fa610f0273dc" class="">Container’a özgü ortam değişkenlerini tanımlamak için kullanılır. </p><p id="1234463f-3348-80bf-8b72-e30e06ae0c4e" class="">Örneğin, bir veritabanı için kullanıcı adı ve parola tanımlamak. </p><p id="1234463f-3348-801f-8d4e-d4f5ba2d3c94" class=""> </p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-80f1-bc91-c6af473ae4a4" class="code"><code class="language-YAML">environment:
+	- POSTGRES_USER=user
+	- POSTGRES_PASSWORD=pass</code></pre></details></li></ul><ul id="1234463f-3348-80de-b18a-ddaa1d5bfe0d" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><strong>Depends_on (Bağımlılıklar)</strong></mark></summary><p id="bf61b65d-d095-48d4-b476-3ffcee71f6fd" class="">Bir hizmetin başka bir hizmete bağlı olduğunu belirtir. </p><p id="1234463f-3348-80ac-a7ab-ecd963554ac9" class="">Örneğin, bir web uygulaması veritabanı olamadan çalışamazsa, <mark class="highlight-gray"><code>depends_on</code></mark> ile bu bağımlılığı belirtiriz. </p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="19361b23-16b4-4c3b-9938-461ba2b5846a" class="code"><code class="language-YAML">depends_on:
+	- db</code></pre></details></li></ul><p id="1234463f-3348-80d7-80da-fa2a0dc876eb" class="">
+</p><h3 id="1234463f-3348-80d2-ada1-e024c479931b" class="">3.2.2 Örnek <mark class="highlight-gray"><code>docker-compose.yml</code></mark> Dosyası</h3><blockquote id="1234463f-3348-8046-82c5-fb58fcf5a1e4" class="">Bu örnek, basit bir web uygualaması ve PostgreSQL veritabanını içerir:</blockquote><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-8012-8373-c4112ffadba1" class="code"><code class="language-YAML">version: &#x27;3&#x27;
+
+services:
+  web:
+    image: my-web-app
+    build: .
+    ports:
+      - &quot;5000:5000&quot;
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+
+volumes:
+  db-data:</code></pre><p id="1234463f-3348-80d2-815e-fe1a6eaa550b" class="">Bu dosyada:</p><ul id="1234463f-3348-8019-82c1-cda792856a36" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray_background">web</mark> hizmeti, bir web uygulaması için kullanılıyor ve 5000 numaralı portu dış dünyaya açıyor.</li></ul><ul id="1234463f-3348-806b-aed4-e3531316db4a" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray_background">db</mark> hizmeti ise PosgreSQL veritabanını çalıştırıyor, kullanıcı adı ve parolayı environment değişkeniyle belirliyor.</li></ul><ul id="1234463f-3348-805a-b80c-e995d11f9c95" class="bulleted-list"><li style="list-style-type:disc">Veritbanı için kalıcı bir volume (hacim) olan <mark class="highlight-gray_background">db-data</mark> tanımlanmıştır.</li></ul><p id="1234463f-3348-80c6-ba67-ee2d027dc667" class="">
+</p><h3 id="1234463f-3348-8037-916b-edb7435b8dde" class="">3.2.3 <mark class="highlight-gray"><code>docker-compose.yml</code></mark>  Dosyasının Kullanım Alanları</h3><ul id="1234463f-3348-8049-8ca0-d3ace9e95222" class="toggle"><li><details open=""><summary><mark class="highlight-blue">Geliştirme Ortamları</mark></summary><p id="1234463f-3348-8015-8e30-cdbe7be04aaa" class="">Birden fazla contgainer ile çalışan projelerde, tüm bağımlılıkların tek bir dosyada tanımlayarak, hızlıca uygulama ortamı oluşturabiliriz.</p></details></li></ul><ul id="1234463f-3348-8051-a782-e9d5b11d1856" class="toggle"><li><details open=""><summary><mark class="highlight-blue">Test Ortamları</mark></summary><p id="1234463f-3348-808b-a3cf-fa54136ffcc2" class="">Farklı mikroservisleri test etmek için bağımlılıkları ve ağ yapılarını kolayca yönetmemize olanak sağlar.</p></details></li></ul><ul id="1234463f-3348-80f1-b659-cb6f1216a66c" class="toggle"><li><details open=""><summary><mark class="highlight-blue">Üretim Ortamları:</mark></summary><p id="1234463f-3348-8059-a3f5-d92ff068a2da" class="">Docker Compose, üretim ortamlarında da kullanılabilir, ancak genellikle Kubernets gibi daha büyük ölçekli çözümler tercih edilir.</p><p id="1264463f-3348-80a8-83b3-f504ad42d62c" class="">
+</p></details></li></ul><p id="1234463f-3348-8002-b086-ef1d268d90e1" class=""><em><mark class="highlight-teal"><strong><span style="border-bottom:0.05em solid">Sonuç:</span></strong></mark></em><mark class="highlight-teal"> Docker Compose, karmaşık uygulamaları sadeleştirmek ve birden fazla container ile çalşmayı kolaylaştırmak için etkili bir araçtır. </mark><mark class="highlight-teal"><code>docker-compose.yml</code></mark><mark class="highlight-teal">  dosyası ise bu sürecin yapı taşıdır.</mark></p><hr id="1234463f-3348-80b3-9f2f-e9be3ef6f5d5"/><p id="1234463f-3348-8024-af62-f9d7678359d6" class="">
+</p><h2 id="1234463f-3348-8083-ba3e-fa2393c3d255" class="">3.3 Docker Compose ile Birden Fazla Container’ı Çalıştırmak</h2><p id="1234463f-3348-8085-98a8-e68e3e48839e" class="">Docker Compose, birden fazla container içeren uygulamaları tek komutla çalıştırmayı kolaylaştırır. Web sunucusu ve veritabanı gibi birbirine bağımlı servisler, Docker Compose yapılandırma dosyasında tanımlandıktan sonra birlikte başlatılabilir. Bu sayede, kompleks uygulama ortamlarını hızlıca ve sorunsuz bir şekilde oluşturabilirsiniz.</p><h3 id="1234463f-3348-8031-af40-f36693625656" class="">3.3.1 Adım Adım Birden Fazla Container’ı Çalıştırma</h3><ol type="1" id="1234463f-3348-8005-96cc-ebdf68ae0b91" class="numbered-list" start="1"><li><mark class="highlight-gray"><code><strong>docker-compose.yml</strong></code></mark> <strong><span style="border-bottom:0.05em solid">Dosyasını Hazırlama</span></strong><p id="1234463f-3348-8079-8234-f481f9befe66" class="">İlgili container’ları tanımlayan bir YAML dosyası oluşturmanız gerekir. Örneğin, bir web uygulamsı ve PostgreSQL veritabanını tek dosyada tanımlayalım:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-80d9-8729-f7fc462b8ec3" class="code"><code class="language-YAML">version: &#x27;3&#x27;
+
+services:
+  web:
+    image: nginx
+    ports:
+      - &quot;8080:80&quot;
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password</code></pre><ul id="1234463f-3348-80f3-80a9-c372a994938c" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray_background"><strong>web</strong></mark>: Nginx web sunucusunu kullanarak bir web hizmeti oluşturur ve 8080 numaralı portu dışa açar.</li></ul><ul id="1234463f-3348-80f8-a457-ed7c04edf2a0" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray_background"><strong>db</strong></mark>: PosgreSQL veritabanını çalıştırır ve gerekli kullanıcı bilgilerini <mark class="highlight-gray_background">environment</mark> anahtarıyla tanımlar.</li></ul><p id="1234463f-3348-809d-bf7b-f731d78a7164" class="">
+</p></li></ol><ol type="1" id="1234463f-3348-80f8-862c-e2e904303b91" class="numbered-list" start="2"><li><mark class="highlight-gray"><code><strong>docker-compose up</strong></code></mark> <span style="border-bottom:0.05em solid">Komutu</span><p id="1234463f-3348-80a3-9ff9-d91522f19b20" class="">Tüm container’ları çalıştırmak için tek komut yeterlidir:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-80d0-a494-d071adca1339" class="code"><code class="language-Bash">docker-compose up</code></pre><p id="1234463f-3348-80a0-b5d5-ec56aeba9499" class="">Bu komut, YAML dosyasında tanımlı olan web sunucusu ve veritabanını aynı anda başlatır. <mark class="highlight-gray_background">depends_on</mark> ile belirtilen sıralamaya göre veritabanı önce başlatılacaktır.</p><p id="1234463f-3348-8075-9346-c31352c07ef5" class="">
+</p></li></ol><ol type="1" id="1234463f-3348-80f4-a60b-c5d87909c1c7" class="numbered-list" start="3"><li><strong><span style="border-bottom:0.05em solid">Container’ları Arka Planda Çalıştırma</span></strong><p id="1234463f-3348-8089-8733-dba1aa4cfeb3" class="">Uygulamamızı arka planda çalıştırmak için <mark class="highlight-gray_background">-d</mark> (detached) paramatresini kullanabiliriz.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-80e6-99ba-e044df693457" class="code"><code class="language-Bash">docker-compose up -d</code></pre><p id="1234463f-3348-8016-9953-c9da753b0ecd" class="">Bu komut, terminalimizi meşgul etmeden container’ları başlatır.</p><p id="1234463f-3348-80e6-8cef-c2a9547f9bd9" class="">
+</p></li></ol><ol type="1" id="1234463f-3348-80ff-ae17-ee1cce1ce075" class="numbered-list" start="4"><li><strong><span style="border-bottom:0.05em solid">Container Durumlarını Kontrol Etme</span></strong><p id="1234463f-3348-80af-bdc9-d40bca5fb01f" class="">Container’ların çalışıp çalışmadığını kontrol etmek için <mark class="highlight-gray_background">docker-compose ps</mark> komutunu kullanabiliriz.</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-807a-a1f8-c48eec307d98" class="code"><code class="language-Bash">docker-compose ps</code></pre><p id="1234463f-3348-802b-bb32-ddb6193e4524" class="">Bu komut, çalışan container’ların listesini ve durumlarını gösterir.</p><p id="1234463f-3348-8073-997d-f9e515399b5f" class="">
+</p></li></ol><ol type="1" id="1234463f-3348-802a-b47b-e9f57100d892" class="numbered-list" start="5"><li><strong><span style="border-bottom:0.05em solid">Tüm Container’ları Durdurma</span></strong><p id="1234463f-3348-8067-9c72-e0572e7887a3" class="">Uygulamamızı ve container’ları durdurmak için aşağıdaki komutu kullanabiliriz:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1234463f-3348-800c-aae8-cbadf6014037" class="code"><code class="language-Bash">docker-compose down</code></pre><p id="1234463f-3348-8028-a9b4-fc86b59909cc" class="">Bu komut, tüm container’ları kapatır ve oluşturulan ağları temizler.</p></li></ol><p id="1234463f-3348-8032-8f35-dd40b1fb1082" class="">
+</p><h3 id="1234463f-3348-8082-ab42-ee8719caa637" class="">3.3.2 Uygulama Senaryosu</h3><p id="1234463f-3348-80b8-aceb-f5b8b28b227f" class="">Bir web uygulaması geliştirdiğinizi ve bu uygulamanın bir web sunucusu ile bir veritabanına ihtiyaç duyduğunu düşünelim. Docker Compose sayesinde, bu iki bağımlı hizmeti tek bir komutla başlatabilir ve yönetebilirsiniz. Uygulamanız geliştirme ortamında hızla test edilebilir ve çalıştırılabilir hale gelir.</p><p id="1234463f-3348-807c-a5aa-eeb812d6b142" class="">Docker Compose, bu süreçleri otomatikleştirerek verimliliği artırır ve mikroservis mimarilerinde de yaygın olarak kullanılır.</p><hr id="1234463f-3348-8030-a765-dbfb0d937290"/><p id="1234463f-3348-8065-9194-cb869981d33b" class="">
+</p><h2 id="1234463f-3348-8057-8c99-ebc6888c794b" class="">3.4 Ortam Değişkenleri ve Docker Compose</h2><p id="1264463f-3348-80b1-9ee4-e4b93463d91f" class="">Docker Compose, container’lar arası iletişimi kolaylaştıran ve container’ların yapılandırılmasını sağlayan <strong>ortam değişkenleri (environment variables) </strong>ile esnek ve dinamik uygulamalar oluşturmamıza olanak tanır. Ortam değişkenleri, container’lara dışarıdan konfigürasyon bilgileri sağlayarak, sabit değerleri dinamik hale getirir ve geliştirme, test, üretim arasında kolayca geçiş yapılmasını sağlar.</p><h3 id="1264463f-3348-806f-bc22-f942fa0ed272" class="">3.4.1 Ortam Değişkenlerinin Kullanım Alanları</h3><ul id="1264463f-3348-807a-a9a3-e60ddcc53151" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Hassas Bilgiler</span></strong></mark></summary><p id="1264463f-3348-80e3-aa3f-e7821066d977" class="">Parolalar, API anahtarları gibi hassas bilgileri kod içerisine gömmek yerine ortam değişkenleri aracılığıyla saklayabiliriz.</p></details></li></ul><ul id="1264463f-3348-8062-823d-fadf81168aaa" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Ortam Bazlı Yapılandırma</span></strong></mark></summary><p id="1264463f-3348-8084-ab84-eae96163ce14" class="">Geliştirme ve üretim ortamları için farklı veritabanı bağlantı bilgilerini, ağ ayarlarını veya API adreslerini kullanabiliriz.</p></details></li></ul><ul id="1264463f-3348-80f1-933b-cf1633167078" class="toggle"><li><details open=""><summary><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Container İçi Ayarlar</span></strong></mark></summary><p id="1264463f-3348-8014-a909-eb9d921a1bf4" class="">Veritabanı, sunucu ve diğer yazılımların yapılandırma ayarlarını dinamik olarak container’a geçirip, container’lar arası iletişim sağlayabiliriz.</p><p id="1264463f-3348-80fe-8570-d766aa191ac9" class="">
+</p></details></li></ul><p id="1264463f-3348-8065-a343-f3b62747d3c0" class="">
+</p><ul id="1264463f-3348-807f-8dcc-d4f05229eb4b" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-gray"><code>docker-compose.yml</code></mark>  Dosyasında Oratam Değişkenleri<p id="1264463f-3348-80e0-8eb0-eec3102200f3" class="">Docker Compose, ortam değişkenlerini <mark class="highlight-gray"><code>environment</code></mark><mark class="highlight-gray"> </mark>anahtarını kullanarak tanımlar. Bu anahtar, container başlatıldığında container’ın içine yerleştirilecek değişkenleri belirtir.</p><blockquote id="1264463f-3348-808b-a09f-e18c590f03e1" class=""><span style="border-bottom:0.05em solid">Örnek: Basit bir ortam değişkeni tanımlama.</span><p id="1264463f-3348-805b-a140-d0a8e1ef6034" class="">Aşağıda PostgreSQL veritabanı için kullanıcı adı ve parolanın <mark class="highlight-gray"><code>environment</code></mark><mark class="highlight-gray"> </mark>anahtarları ile nasıl tanımlandığını görebiliriz:</p><p id="1264463f-3348-80af-bf93-c4edcccd057a" class="">  </p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1264463f-3348-80d9-b15b-e533cf452797" class="code"><code class="language-YAML">version: &#x27;3&#x27;
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword</code></pre><ul id="1264463f-3348-801f-85a2-d93446e19b6c" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">POSTGRES_USER</span></strong>: Veritabanı kullanıcısı olarak <mark class="highlight-gray"><code>myuser</code></mark> tanımlanmıştır.</li></ul><ul id="1264463f-3348-8055-92db-fd2d26a2bf22" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">POSTGRES_PASSWORD</span></strong>: Veritabanı parolası olarak <mark class="highlight-gray"><code>mypassword</code></mark><code> </code>tanımlanmıştır.</li></ul></blockquote></li></ul><ul id="1264463f-3348-8047-9408-e207e2f05a2e" class="bulleted-list"><li style="list-style-type:disc">Dosya Tabanlı Ortam Değişkenleri<p id="1264463f-3348-807c-9802-d633d8484011" class="">Ortam değişkenlerini aryı bir <mark class="highlight-gray"><code>.env</code></mark><mark class="highlight-gray">  </mark>dosyasında saklayarak, hassas bilgiler kod tabanından ayırabiliriz. Böylece değişkenlerin yönetimi daha kolay hale gelir ve aynı yapılandırma dosyasını farklı ortamlar için kullanabilirsiz:</p><p id="1264463f-3348-80ad-913f-eb0324f72949" class=""><mark class="highlight-gray"><code><strong>.env </strong></code></mark><strong>Dosya Örneği:</strong></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1264463f-3348-800e-a01a-edbfef06ad51" class="code"><code class="language-Makefile">POSTGRES_USER=myuser
+POSTGRES_PASSWORD=mypassword</code></pre><p id="1264463f-3348-80a8-b0e0-e852d43d3a6f" class=""><mark class="highlight-gray"><code>docker-compose.yml</code></mark><mark class="highlight-gray"> </mark>dosyasında bu <mark class="highlight-gray"><code>.env</code></mark><mark class="highlight-gray"> </mark>dosyasını kullanarak yapılabiliriz:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1264463f-3348-80d2-a4fb-f6ef36b3f129" class="code"><code class="language-YAML">version: &#x27;3&#x27;
+
+services:
+  db:
+    image: postgres
+    env_file:
+      - .env</code></pre><p id="1264463f-3348-8070-bf2e-f0397cc07e55" class="">Bu yapılandırma, <mark class="highlight-gray"><code>db</code></mark><mark class="highlight-gray"> </mark>hizmeti için gerekli kullanıcı adı ve parolayı <mark class="highlight-gray"><code>.env</code></mark><mark class="highlight-gray">  </mark>dosyasından çeker.</p></li></ul><h3 id="1264463f-3348-8050-9682-c0b7a2670cde" class="">3.4.2 Ortam Değişkenlerini Geçersiz Kılma</h3><p id="1264463f-3348-8027-9e01-e687bd3845b2" class="">Ortam değişkenlerini Docker Compose komutlarıyla dinamik olarak değiştirmek mümkündür.</p><blockquote id="1264463f-3348-80f8-8493-eb3d186421f3" class="">Örneğin, <mark class="highlight-gray"><code>docker-compose up</code></mark><mark class="highlight-gray"> </mark>komutunu çalıştırırken komut satırında belirli değişkenleri geçersiz kılabilirsiniz:</blockquote><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1264463f-3348-806f-acc1-e7c160e54f65" class="code"><code class="language-Bash">POSTGRES_USER=anotheruser POSGRS_PASSWORD=anotherpassword docker-compose up</code></pre><p id="1264463f-3348-8032-88bd-ccb8b77f965a" class="">Bu komut, <mark class="highlight-gray"><code>docker-compose.yml</code></mark><mark class="highlight-gray"> </mark>veya <mark class="highlight-gray"><code>.env</code></mark><mark class="highlight-gray">  </mark>dosyasında tanımlı ortam değişkenlerini geçersiz kılacak ve belirtilen değerleri kullancaktır.</p><p id="1264463f-3348-8069-af00-f585a89812fc" class="">
+</p><h3 id="1264463f-3348-80d5-809f-c881918c63fa" class="">3.4.3 Container’lar Arası İletişim ve Ortam Değişkenleri</h3><p id="1264463f-3348-805b-8cac-ff1bcdf52d5b" class="">Container’lar arası iletişimde de ortam değişkenleri önemli bir rol oynar. Örneğin, bir web uygulamasının veritabanına erişmesi için veritabanının IP adresini veya servis adını bir ortam değişkeni olarak kullanabiliriz. Docker Compose, aynı ağda yer alan container’lar arasında isim çözümlemeyi destekler, böylece container isimlerini kullanarak iletişim sağlayabiliriz.</p><blockquote id="1264463f-3348-80c5-8b9e-fc5230b3b373" class=""><mark class="highlight-default"><strong>Örnek: Web Uygulaması ve Veritabanı:</strong></mark> </blockquote><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1264463f-3348-80e8-9a13-f80b34cf278d" class="code"><code class="language-YAML">version: &#x27;3&#x27;
+
+services:
+  web:
+    image: my-web-app
+    environment:
+      DB_HOST: db
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword</code></pre><p id="1264463f-3348-80ea-8de1-f6f271b947a3" class="">Bu örnekte <strong>web </strong>hizmeti <strong>DB_HOST </strong>ortam değişkeni aracılığıyla <strong>db</strong> hizmetine bağlanıyor. Veritabanı kullanıcı adı ve parolası, <mark class="highlight-gray"><code>POSTGRES_USER</code></mark><mark class="highlight-gray"> </mark>ve <mark class="highlight-gray"><code>POSTGRES_PASSWORD</code></mark><mark class="highlight-gray"> </mark>değişkeninden alınıyor. Bu tür ortam değişkenleri, container’lar arasında esnek bir yapı kurmanıza yardımcı olur.</p><p id="1264463f-3348-8026-9dc7-ef5a43647f71" class="">
+</p><p id="1264463f-3348-80d1-8efa-cc952c94ab96" class="">
+</p><blockquote id="1264463f-3348-8099-bc88-e0e910047eb1" class=""><em><mark class="highlight-teal"><strong><span style="border-bottom:0.05em solid">Sonuç:</span></strong></mark></em><mark class="highlight-teal"> Ortam değişkenleri ve Docker Compose, container’lar arası iletişimi kolaylaştırarak esnek ve sürdürülebilir uygulama yapılandırmaları oluşturmamıza imkan tanır. Özellikle mikroservis tabanlı uygulamalarda, her bir servisin bağımsız bir şekilde yapılandırılmasını sağlar ve farklı ortamlar için hızlıca ayar yapma olanağı sunar.</mark></blockquote><hr id="1264463f-3348-80f9-91f7-ca707dc2c4fc"/><p id="1264463f-3348-8095-9423-f0c33fef94ac" class="">
+</p><h2 id="1264463f-3348-80eb-a00b-f62a0f776015" class="">3.5 Docker Compose ile Ölçeklendirme ve Otomatikleştirme</h2><p id="1264463f-3348-804e-bfd2-eddd890455b4" class="">Docker Compose, uygulamaların <strong>ölçeklenmesi </strong>ve <strong>yönetilmesi </strong>için güçlü araçlar sunar. Büyük uygulamaların verimli bir şekilde çalışmasını sağlamak amacıyla servislere yeni container&#x27;lar ekleyebilir, <span style="border-bottom:0.05em solid">yük dengeleme yapabilir</span> ve <span style="border-bottom:0.05em solid">container&#x27;ların yönetimini otomatikleştirebiliriz.</span> Ayrıca, uygulamanızın yük altında nasıl davranacağını test edebilir ve ölçeklenebilirliği artırabilirsiniz.</p><h3 id="1264463f-3348-8099-840a-e14a03327007" class="">3.5.1 Docker Compose ile Ölçeklendirme</h3><p id="1264463f-3348-80b4-a4b1-cbb492f5a6c0" class="">Docker Compose, tek bir komutla bir servisin birden fazla örneğini (container’ını) çalıştırmamıza olanak tanır. Ölçeklendirme işlemi, özellikle mikroservis mimarisinde farklı görevleri yerine getiren container’lar için oldukça kullanışlıdır.</p><p id="1264463f-3348-8075-8181-c7e89652f46f" class="">
+</p><p id="1264463f-3348-8010-82aa-c8cd9faec742" class=""><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Ölçeklendirme İşlemi:</span></strong></mark></p><ul id="1264463f-3348-80cb-98c5-c3ec6fa50e4b" class="toggle"><li><details open=""><summary><mark class="highlight-gray"><strong> </strong></mark><strong>1.</strong><mark class="highlight-gray"><strong> </strong></mark><mark class="highlight-gray"><code><strong>docker-compose.yml</strong></code></mark><mark class="highlight-gray"><strong>  </strong></mark><mark class="highlight-default"><strong>Dosyası</strong></mark></summary><p id="1264463f-3348-80f9-a0b9-e1918c0edd93" class="">Öneclikle, <mark class="highlight-gray"><code>docker-compose.yml</code></mark><mark class="highlight-gray"> </mark>dosyasında ölçeklenecek servisi tanımlayalım:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1264463f-3348-801c-9ac3-d8615946cdbe" class="code"><code class="language-YAML">version: &#x27;3&#x27;
+
+services:
+  web:
+    image: nginx
+    ports:
+      - &quot;8080:80&quot;</code></pre><p id="1264463f-3348-8076-a48e-d8df0a3486c0" class="">Bu örnek ile bir <mark class="highlight-gray"><code>nginx</code></mark><mark class="highlight-gray">  </mark>web sunucusunu çalıştırıyoruz.</p></details></li></ul><ul id="1264463f-3348-8089-9369-ddabb7069128" class="toggle"><li><details open=""><summary><mark class="highlight-default"><strong>2. Docker Compose Scale Komutu</strong></mark></summary><p id="1264463f-3348-80f6-90f8-f6743d80c5c8" class="">Tek bir container yerine birden fazla container çalıştırmak için <mark class="highlight-gray"><code>docker-compose up --scale </code></mark><mark class="highlight-gray"> </mark>komutunu kullanabiliriz:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1264463f-3348-80e1-8852-c62dfd6bb0e8" class="code"><code class="language-Bash">docker-compose up --scale web=3</code></pre><p id="1264463f-3348-8060-9f7d-f857a714ef69" class="">Bu komut, <strong><span style="border-bottom:0.05em solid">web</span></strong> servisini 3 farklı container olarak çalıştıracaktır. Bu container’lar aynı servisin birer kopyası olarak görev yapar ve yük dengelemesiyle birlikte çalışır.</p></details></li></ul><ul id="1264463f-3348-8095-911d-e2d53a5db58f" class="toggle"><li><details open=""><summary><mark class="highlight-default"><strong>3. Container’ların Durumunu Görüntüleme</strong></mark></summary><p id="1264463f-3348-801f-8a58-cbe161b06714" class="">Çalışan tüm container’ların durumunu ölçeklendirme işleminin sonuçlarını görmek için <mark class="highlight-gray"><code>docker-compose ps</code></mark><mark class="highlight-gray"> </mark>komutunu kullanabiliriz:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1264463f-3348-80b5-98ed-fc0b4d8a0707" class="code"><code class="language-Bash">docker-compose ps</code></pre><p id="1264463f-3348-80f6-8bfa-f690899d68ae" class="">Bu komut daha önce belirttiğimiz şekilde, her bir container’ın ID’sini, durumunu ve hangi porta yönlendirildiğini listeler.</p></details></li></ul><h3 id="1264463f-3348-80f9-ab87-c2874d3ebf1c" class="">3.5.2 Docker Compose ile Otomatikleştirme</h3><p id="1264463f-3348-80d0-983e-c90c5b15d37f" class="">Docker Compose, container’ları otomatik olarak yeniden başlatma, hata durumlarında yeniden deneme ve log yönetimi gibi otomasyon süreçleriyle container yönetimini kolaylaştırır.</p><p id="1264463f-3348-80c6-a05a-d1797ec27399" class="">
+</p><ul id="1264463f-3348-80f7-a9ff-f7bb6ee5736f" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Otomatik Yeniden Başlatma</span></strong></mark><p id="1264463f-3348-8044-821a-e1bf54140099" class="">Bir container’ın başarısız olması durumunda, otomatik olarak yeniden başlatılmasını sağlayabilriz. Bunun için <mark class="highlight-gray"><code>restart</code></mark><mark class="highlight-gray">  </mark>politikasını <mark class="highlight-gray"><code>docker-compose.yml</code></mark><mark class="highlight-gray"> </mark> dosyamıza ekleyebiliriz:</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1264463f-3348-8050-af29-d03bebfebd4f" class="code"><code class="language-YAML">verison: &#x27;3&#x27;
+
+services:
+	web:
+		image: nginx
+		restart: always</code></pre><p id="1264463f-3348-80fd-8d7e-e6df8e7cfd43" class="">Bu yapılandırma, web container’ını her zaman yeniden başlatır. Diğer <mark class="highlight-gray"><code>restart</code></mark><mark class="highlight-gray"> </mark>politikaları şunlardır:</p><ul id="1264463f-3348-802e-9c40-cf63909a1a51" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-gray"><code><strong>no</strong></code></mark>: Container başarısız olsa bile yeniden başlatılmaz (varsayılan ayar).</li></ul><ul id="1264463f-3348-80ba-8762-f44635deae46" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-gray"><code><strong>always</strong></code></mark>: Container her durumda yeniden başlatılır.</li></ul><ul id="1264463f-3348-807e-b767-cf33e2293a68" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-gray"><code><strong>unless-stopped</strong></code></mark>: Container, manuel olarak durdurulmadıkça yeniden başlatılır.</li></ul><ul id="1264463f-3348-8030-bfff-c4209817c662" class="bulleted-list"><li style="list-style-type:circle"><mark class="highlight-gray"><code><strong>on-failure</strong></code></mark>: Container yalnızca başarısızlık durumunda yeniden başlatılır.</li></ul><p id="1264463f-3348-8054-9fbe-d71e3bfe3b21" class="">
+</p></li></ul><h3 id="1264463f-3348-8042-8f98-eb1727a63e95" class="">3.5.3 Log Takibi ve Yönetimi</h3><p id="1264463f-3348-804f-abd8-eed1be296147" class="">Docker Compose ile her bir servisin log’larını takip edebilir ve yönetebiliriz. Log’lar uygulamamızın durumunu izlemede önemli bir rol oynar. Aşağıdaki komutla tüm container’ların log’larını görebiliriz:</p><p id="1264463f-3348-8054-a9d7-c7fec5d1f412" class=""> </p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1264463f-3348-80f0-aac3-dda708db70f3" class="code"><code class="language-Bash">docker-compose logs</code></pre><p id="1264463f-3348-808d-a07b-d0083e33ec0d" class="">Bu komut, tüm servislerin log’larını gerçek zamanlı olarak görüntüler.</p><p id="1264463f-3348-80f6-859d-d154b5dc9972" class="">
+</p><h3 id="1264463f-3348-806a-9384-d3a7768c97bf" class="">3.5.4 Cron ile Otomatikleştirme</h3><p id="1264463f-3348-8073-b329-d75f15f5cee6" class="">Docker Compose işlemlerini daha da otomatikleştirmek için sistemimize <strong><span style="border-bottom:0.05em solid">cron</span></strong> görevleri ekleyerek belirli zamanlarda container’ların yeniden başlatılması, yedeklenmesi veya güncellenmesi gibi işlemleri gerçekleştirebiliriz.</p><p id="1264463f-3348-80f3-82bf-ebd6fae6fb5d" class="">
+</p><p id="1264463f-3348-8023-a6f4-f941d9c04cc6" class=""><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Ölçeklendirme Stratejileri</span></strong></mark></p><p id="1264463f-3348-80d2-b2c8-c255850f7c76" class="">Docker Compose, farklı yük ve kullanım durumlarına göre ölçekleme stratejilerini destekler:</p><ul id="1264463f-3348-80ef-9e01-c32cb0b85b8c" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid">Yatay Ölçekleme:</span> Daha fazla container ekleyerek servisi genişletme (örneğin; <mark class="highlight-gray"><code>web=5</code></mark><mark class="highlight-gray"> </mark>5 web sunucusu).</li></ul><ul id="1264463f-3348-804c-964f-c2f549eceb94" class="bulleted-list"><li style="list-style-type:disc"><span style="border-bottom:0.05em solid">Dikey Ölçekleme:</span> Tek bir container’a daha fazla kaynak (CPU/RAM) tahsis ederek kapasite arttırma.</li></ul><p id="1264463f-3348-8054-9299-d36d55371c52" class="">Her iki yöntem de uygulamamızın esnek bir şekilde büyümesini ve performans sorunlaryla başa çıkmasını sağlar.</p><p id="1264463f-3348-8069-a7d4-f5d3bb7e359c" class="">
+</p><blockquote id="1264463f-3348-80c0-866c-de508b82cde0" class=""><em><mark class="highlight-teal"><mark class="highlight-default_background"><strong><span style="border-bottom:0.05em solid">Sonuç:</span></strong></mark></mark></em><mark class="highlight-teal"><mark class="highlight-default_background"> Compose, uygulamaların ölçeklenmesi ve container’larımızın yönetimini otomatikleştirmek için mükemmel bir araçtır. Birkaç basit komutla, servislerimizi çoğaltabilir, container’ları yeniden başlatabilir  ve uygulama altyapımızı sorunsuz bir şekilde yönetebiliriz. Bu otomasyon ve ölçeklendirme yetenekleri, Docker tabanlı sistemlerin yüksek performanslı ve dayanıklı olmasını sağlar. </mark></mark></blockquote><hr id="1264463f-3348-80be-9c27-f40aac3e9700"/><hr id="1264463f-3348-8005-9d3f-dd26b5663ca6"/><p id="1264463f-3348-8068-9f01-dd2f8413cc3e" class="">
+</p><p id="1264463f-3348-80da-a4cb-c516755f2942" class="">
+</p><div id="1264463f-3348-8034-958a-f4624f760432" class="column-list"><div id="1264463f-3348-8081-a822-c7194a78f2ec" style="width:100%" class="column"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1264463f-3348-800e-88ae-d477f8912511"><div style="font-size:1.5em"><span class="icon">⬅️</span></div><div style="width:100%"><p id="1264463f-3348-80ad-8ec5-c51fc8cc5922" class=""><a href="https://www.notion.so/Docker-1-Docker-Nedir-Docker-a-Giri-ve-Temel-Kavramlar-1194463f3348803abcedee5687dd6b3a?pvs=21">Docker - 1</a></p></div></figure><p id="1264463f-3348-80b8-8eaf-dfc3bbfe2aac" class="">
+</p></div><div id="1264463f-3348-806e-a695-d7fe2c909266" style="width:100%" class="column"><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="1264463f-3348-8064-9424-cf1745fd7c7d"><div style="font-size:1.5em"><span class="icon">⬅️</span></div><div style="width:100%"><p id="98affb16-2431-4e5b-8680-84b5526d50d8" class=""><a href="https://www.notion.so/Docker-2-Docker-Image-ve-Container-lar-Anlamak-11d4463f334880ed9795cd8e79c28d6e?pvs=21"> Docker - 2</a></p></div></figure><p id="1264463f-3348-807f-8b7d-d920f9441dd7" class="">
+</p></div></div><p id="1264463f-3348-8028-a5ef-d46acc9a14ae" class="">
+</p><p id="1264463f-3348-805b-abce-db58139f51af" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

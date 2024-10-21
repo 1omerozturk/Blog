@@ -1,0 +1,699 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Docker - 1: ``Docker Nedir? Docker’a Giriş ve Temel Kavramlar”</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-transparentGray { background-color: rgba(227, 226, 224, 0); }
+.select-value-color-translucentGray { background-color: rgba(0, 0, 0, 0.06); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1194463f-3348-803a-bced-ee5687dd6b3a" class="page sans"><header><img class="page-cover-image" src="1.png" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><img class="icon" src="Docker.png"/></div><h1 class="page-title">Docker - 1: ``Docker Nedir? Docker’a Giriş ve Temel Kavramlar”</h1><p class="page-description"></p></header><div class="page-body"><h2 id="1194463f-3348-80e1-9d37-c32bb9e44f27" class="">1.1 Docker</h2><p id="1194463f-3348-80ef-922e-ebc2d2befdd4" class=""><mark class="highlight-red"><strong><span style="border-bottom:0.05em solid">Docker</span></strong></mark>, yazılım uygulamalarının<span style="border-bottom:0.05em solid"> geliştirilmesi</span>, <span style="border-bottom:0.05em solid">dağıtılması</span> ve<span style="border-bottom:0.05em solid"> çalıştırılması</span> için kullanılan <strong>açık kaynaklı</strong> bir platformdur. Basit anlamda, uygulamalarınızı ve bunların tüm bağımlılıklarını (kütüphaneler, konfigürasyonlar vb.) bir<strong><span style="border-bottom:0.05em solid"> paket</span></strong> halinde birleştirerek, farklı ortamlarda (geliştirme, test, üretim) aynı şekilde çalışmasını sağlar.</p><p id="1194463f-3348-809c-9fae-e53687dfbd54" class="">Bu sayede ``<em><mark class="highlight-gray_background">Localde (bende) çalışıyor ama başka birinde neden çalışmıyor?</mark></em>” gibi sorunlarla karşılaşma olasılığınızı büyük ölçüde azaltır.</p><p id="1194463f-3348-80e4-aba3-ef83a8f89d9e" class="">
+</p><h2 id="1194463f-3348-8006-a787-cd764773e108" class="">1.2 Docker’ın Ortaya Çıkışı ve Önemi</h2><p id="1194463f-3348-805e-a26b-d64f3eda552f" class="">Docker’dan önce de konteynerleşme kavramı mevcuttu. Özellikle Linux işletim sisteminde çalışnan <strong><span style="border-bottom:0.05em solid">LXC(Linux Containers)</span></strong> gibi teknolojiler, uygulamaları izole ortamlarda çalıştırmak için kullanılıyordu. Ancak bu teknolojiler, karmaşık yapıları ve kullanım zorlukları nedeniyle yaygınlaşmakta zorlanıyordu.</p><p id="1194463f-3348-8072-9bf1-cd5cfb602ede" class="">2013 yılında Solomon Hykes liderliğindeki bir ekip tarafından geliştirilen Docker, LXC gibi teknolojilerin üzerine inşa edilerek,  konteynerleşmeyi daha basit daha kullanışlı ve daha erişilebilir hale getirdi. Docker’ın en büyük yeniliklerinden biri, konteynerleri oluşturmak ve yöntemek için daha kullanıcı dostu bir arayüz sunmasıydı.</p><p id="1194463f-3348-80da-a9e3-eace57574a8e" class="">Docker’ın başarısının nedenleri ve önemi:</p><ul id="1194463f-3348-80ca-8c3d-db77152c2759" class="toggle"><li><details open=""><summary><mark class="highlight-red"><strong>Tutarlılık</strong></mark></summary><p id="1194463f-3348-804a-bed9-d1dc7c08df07" class="">Uygulamalarınızı her yerde aynı şekilde çalıştırarak, geliştirme ile üretim arasındaki farkları ve tutarsızlıkları ortadan kaldırır.</p></details></li></ul><ul id="1194463f-3348-8022-98c2-d904278f502c" class="toggle"><li><details open=""><summary><mark class="highlight-red"><strong>İzolasyon</strong></mark></summary><p id="1194463f-3348-808f-88fb-ea5ae5f39de4" class="">Her uygulama kendi bağımsız ortamında çalıştığı için, bir uygulamanın çökmesi diğerini etkilemez.</p></details></li></ul><ul id="1194463f-3348-80ed-9617-fd24cf47c108" class="toggle"><li><details open=""><summary><mark class="highlight-red"><strong>Verimlilik</strong></mark></summary><p id="1194463f-3348-807d-9c8d-f23cf0084bae" class="">Kaynakları daha etkin kullanarak, aynı donanım üzerinde daha fazla uygulama çalıştırma olanağı sağlar.</p></details></li></ul><ul id="1194463f-3348-804b-a444-eff97fe45c2e" class="toggle"><li><details open=""><summary><mark class="highlight-red"><strong>Hızlı Dağıtım</strong></mark></summary><p id="1194463f-3348-80a5-bb58-fe8030aa54df" class="">Uygulamaları hızlıca oluşturup dağıtmanıza yardımcı olur.</p></details></li></ul><ul id="1194463f-3348-8048-9591-e806b5c5d52b" class="toggle"><li><details open=""><summary><mark class="highlight-red"><strong>Ölçeklenebilirlik</strong></mark></summary><p id="1194463f-3348-806f-a735-fb42998c9c5f" class="">Yükte artış olduğunda, <strong><span style="border-bottom:0.05em solid">konteyner</span></strong> sayısına kolayca arttırarak daha verimli kullanım sunar.</p></details></li></ul><p id="1194463f-3348-8078-a659-fa5c7c0bbe1c" class="">
+</p><p id="1194463f-3348-8084-a8c9-d48cf833fbaa" class="">Docker‘ın sayesinde:</p><ul id="1194463f-3348-800e-bf7a-e78a998d8cc4" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Mikroservis miamarisi</span></strong> daha popüler hale geldi.</li></ul><ul id="1194463f-3348-802d-84b3-c6c1b56d4e6e" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">DevOps</span></strong><strong> </strong>kültürünün benimsenmesi hızlandı.</li></ul><ul id="1194463f-3348-805b-a4f6-ec90f2128210" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Bulut bilişim</span></strong> teknolojileriyle daha kolay entegrasyon sağlandı.</li></ul><ul id="1194463f-3348-8066-ad45-f48571223e9f" class="bulleted-list"><li style="list-style-type:disc"><strong><span style="border-bottom:0.05em solid">Uygulamaların daha hızlı ve güvenli bir şekilde dağıtımı</span></strong> mümkün oldu.</li></ul><p id="1194463f-3348-8021-b76e-f8a234d5a7f2" class="">
+</p><h2 id="1194463f-3348-80f8-a214-fc6a16f0d4ed" class="">1.3 Docker Temel Kavramları</h2><ol type="1" id="1194463f-3348-8033-8df4-fbafae8b4595" class="numbered-list" start="1"><li><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Container</span></strong></mark><ol type="a" id="1194463f-3348-8002-b7a8-dfb4bbfd6658" class="numbered-list" start="1"><li><em><strong>Tanım: </strong></em><mark class="highlight-teal">Bir konteyner, uygulamanızın tüm bağımlılıklarıyla birlikte paketlendiği bir izole ortamdır.</mark></li></ol><ol type="a" id="1194463f-3348-8008-9bac-c0d07a2bbbaf" class="numbered-list" start="2"><li><em><strong>İşlev:</strong></em> <mark class="highlight-brown">Uygulamanızın her yerde aynı şekilde çalışmasını sağlar. İşletim sistemi çekirdeğini paylaşırken, diğer uygulamalardan izole bir ortam sunar.</mark></li></ol><p id="1194463f-3348-8014-9747-d0da1d497075" class="">
+</p></li></ol><ol type="1" id="1194463f-3348-801a-abc0-df416db77f78" class="numbered-list" start="2"><li><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Image</span></strong></mark><ol type="a" id="1194463f-3348-8090-bef5-ef0f413ad8f1" class="numbered-list" start="1"><li><em><strong>Tanım:</strong></em><mark class="highlight-teal"> Bir konteynerin okunabilir bir şablonudur. İçerisinde uygulamanızın kodları, konfigürasyonları ve bağımlılıkları bulunur.</mark></li></ol><ol type="a" id="1194463f-3348-80a9-802a-c61339537694" class="numbered-list" start="2"><li><em><strong>İşlev: </strong></em><mark class="highlight-brown">Yeni konteynerler oluşturmak için kullanılır. Bir kez oluşturulduktan sonra değiştirilemez ancak yeni br Image’ye (görüntüye) kopyalanarak üzerinde değişiklik yapabilir.</mark></li></ol><p id="1194463f-3348-80b3-8e92-f190e6417bd7" class="">
+</p></li></ol><ol type="1" id="1194463f-3348-80a1-a315-c3d9c7cf5652" class="numbered-list" start="3"><li><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Container Registry</span></strong></mark><ol type="a" id="1194463f-3348-80d3-935a-f8ef0d42b06a" class="numbered-list" start="1"><li><em><mark class="highlight-default"><strong>Tanım:</strong></mark></em><mark class="highlight-teal"> Oluşturduğunuz Image’lerin (görüntülerin) depolandığı merkezi bir depolama alanıdır.</mark></li></ol><ol type="a" id="1194463f-3348-8013-867f-ed5ad00bef8e" class="numbered-list" start="2"><li><em><mark class="highlight-default"><strong>İşlev:</strong></mark></em><mark class="highlight-default"> </mark><mark class="highlight-brown">Image’leri (görüntüleri) farklı ekiplerle paylaşmanıza, versiyonlamanıza ve yönetmenize olanak tanır.</mark></li></ol><p id="1194463f-3348-80ee-b07c-dbcc0c05602f" class="">
+</p></li></ol><ol type="1" id="1194463f-3348-80a4-8293-e39b83c40f61" class="numbered-list" start="4"><li><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Docker File</span></strong></mark><ol type="a" id="1194463f-3348-800e-91f1-e0ad22d8aea9" class="numbered-list" start="1"><li><em><strong>Tanım: </strong></em><mark class="highlight-teal">Bir Image’ı (görüntüyü) nasıl oluşturacağınızı tanımlayan bir metin dosyasıdır.</mark></li></ol><ol type="a" id="1194463f-3348-8016-b5be-c3297153da5b" class="numbered-list" start="2"><li><em><strong>İşlev:</strong></em> <mark class="highlight-brown">Bir taban görüntüsünü seçerek, gerekli yazılımları yükleyerek ve uygulamanızın kodlarını kopylalayarak bir Image (görüntü) oluşturur.</mark></li></ol><p id="1194463f-3348-805a-873e-cf889a8c6d80" class="">
+</p></li></ol><ol type="1" id="1194463f-3348-80f3-bd7f-fbb0b77140cc" class="numbered-list" start="5"><li><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Docker Compose</span></strong></mark><ol type="a" id="1194463f-3348-80a9-b0c5-f3c273eb6ab0" class="numbered-list" start="1"><li><em><strong>Tanım:</strong></em> <mark class="highlight-teal">Birden fazla Container’ı (Konteyneri) yöneten bir araçtır.</mark></li></ol><ol type="a" id="1194463f-3348-8090-a6b2-d5cfd4b29a9a" class="numbered-list" start="2"><li><em><strong>İşlev:</strong></em> <mark class="highlight-brown">Bir projedeki tüm hizmetleri tek bir komutla başlatıp durdurmanıza olanak tanır.</mark></li></ol><p id="1194463f-3348-8058-8dde-fce7f161dc2e" class="">
+</p></li></ol><ol type="1" id="1194463f-3348-80c4-8f8e-eb7d314b6f39" class="numbered-list" start="6"><li><mark class="highlight-blue"><strong><span style="border-bottom:0.05em solid">Docker Swarm</span></strong></mark><ol type="a" id="1194463f-3348-8072-aa50-fb4e7deb1851" class="numbered-list" start="1"><li><em><strong>Tanım:</strong></em> <mark class="highlight-teal">Birden fazla Docker motoru üzerinde çalışan Contaier’ları (konteynerleri) yönetmek için kullanılan bir kümeleme çözümüdür.</mark></li></ol><ol type="a" id="1194463f-3348-80b7-81f8-c26aa40f9a83" class="numbered-list" start="2"><li><em><strong>İşlev:</strong></em> <mark class="highlight-brown">Büyük ölçekli uygulamaları dağıtmak ve yönetmek için kullanılır.</mark></li></ol></li></ol><p id="1194463f-3348-80f8-a530-d9373965e25a" class="">
+</p><p id="1194463f-3348-80fa-ab06-e598e484c20a" class="">
+</p><h2 id="1194463f-3348-8046-bcd8-fe43b0464c98" class="">1.4 Docker Kurulumu</h2><ul id="1194463f-3348-8085-a7a9-c4db0153c99c" class="bulleted-list"><li style="list-style-type:disc">Docker’ın resmi web sitesinden kendi bilgisayarınızın işletim sistemine uygun olanını indirin.</li></ul><ul id="1194463f-3348-802e-8754-cab0cad415b4" class="bulleted-list"><li style="list-style-type:disc">İndirme işelemi tamamlandıktan sonra, Docker’ı yüklemek için adımlar geçin ve yükleyin.</li></ul><ul id="1194463f-3348-8061-a87e-f2cef6241418" class="bulleted-list"><li style="list-style-type:disc">Yükleme işlemi tamamlandıktan sonra, Docker’ çalıştırmak için komut istemini veya powershell’ i açın.</li></ul><ul id="1194463f-3348-8072-ad34-f67351e3a5b4" class="bulleted-list"><li style="list-style-type:disc">Docker’ı yükleme işlemi tamamlandığını ve docker kullanıma hazır olduğunu kontrol etmek için <mark class="highlight-yellow"><code>docker version</code></mark> komutunu girin. </li></ul><p id="1194463f-3348-801d-b5fa-f86f49e5d1a5" class="">
+</p><h2 id="1194463f-3348-8070-9924-f7de09aa648e" class="">1.5 Docker ve Sanallaştırma</h2><p id="1194463f-3348-800b-9c5b-f038e223a8f4" class=""><strong><span style="border-bottom:0.05em solid">Sanallaştırma</span></strong>, fiziksel olarak bir bilgisayarın kaynaklarını (CPU, bellek, disk, ağ vb.) birden fazla bağımsız sanal makineye (Virtual Machine) bölen bir teknolojidir. Bu sayede, tek bir fiziksel sunucu üzerinde farklı işletim sistemleri ve uygulamaları aynı anda çalıştırılabilir.</p><h3 id="1194463f-3348-805b-8049-f8b940bf4d84" class="">1.5.1 Sanallaştırmanın Önemi:</h3><ul id="1194463f-3348-8084-9d42-f44e9ecef13a" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid">Çoklu İşletim Sistemi Kullanımı: </span></summary><p id="1194463f-3348-8051-9ea7-e615bcc85927" class=""><mark class="highlight-purple_background">Tek bir bilgisayarda birden fazla işletim sistemi kullanmanıza olanak tanır.</mark></p></details></li></ul><ul id="1194463f-3348-80e9-a4b1-c8aa879919bd" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid">Uygulama İzolasyonu: </span></summary><p id="1194463f-3348-807d-ab39-c7eaae6c8067" class=""><mark class="highlight-purple_background">Farklı uygulamaları birbirinden izole ederek çakışma riskini azaltır.</mark></p></details></li></ul><ul id="1194463f-3348-8036-a783-c26fab70bf0f" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid">Test Ortamları:</span></summary><p id="1194463f-3348-8039-9217-cfaea4be5ed3" class=""><mark class="highlight-purple_background">Yeni yazılımlar veya güncellemeleri sanal ortamlarda test etme imkanı sunar.</mark></p></details></li></ul><ul id="1194463f-3348-80bf-bf75-d6d7eca6198e" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid">Kaynak Verimliliği </span></summary><p id="1194463f-3348-8017-88f7-c12380e89565" class=""><mark class="highlight-purple_background">Donanım kaynaklarını daha etkin kullanmanıza yardımcı olur.</mark></p></details></li></ul><p id="1194463f-3348-801d-9ace-cfadad424441" class="">
+</p><h3 id="1194463f-3348-8065-a62a-eddc4f161a6d" class="">1.5.2 Sanallaştırmayı Etkinleştirme:</h3><p id="1194463f-3348-8012-b00e-d3e70a307905" class="">Sanallaştırmayı etkinleştirmek için öncelikle bilgisayarınızın donanımının bu özelliği desteklediğinden emin olmanız gerekir. Genellikle modern işlemciler sanallaştırmayı destekler.</p><ul id="1194463f-3348-806c-925d-c9731bb5d1ba" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background"><span style="border-bottom:0.05em solid">BIOS/UEFI Ayarlarını Kontrol Etme:</span></mark><ul id="1194463f-3348-80f3-b19e-e3cdb0310d1d" class="bulleted-list"><li style="list-style-type:circle">Bilgisayarınızı yeniden başlatırken genellikle <mark class="highlight-red">F2</mark>, <mark class="highlight-red">F10</mark> veya <mark class="highlight-red">Del</mark> tuşlarına basarak <em>BIOS/UEFI </em>ayarlarına girebilirsiniz.</li></ul><ul id="1194463f-3348-8066-8104-d4088a344d92" class="bulleted-list"><li style="list-style-type:circle">&quot;<span style="border-bottom:0.05em solid">Virtualization</span>&quot; veya “<span style="border-bottom:0.05em solid">Intel VT-x/AMD-v</span>&quot; gibi bir seçenek arayın ve bu seçeneği etkinleştirin.</li></ul><ul id="1194463f-3348-808d-b480-fdae2d811ba5" class="bulleted-list"><li style="list-style-type:circle">Değişiklikleri kaydedip bilgisayarınızı yeniden başlatın.</li></ul></li></ul><ul id="1194463f-3348-80de-848d-cb4d5431de4f" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background"><span style="border-bottom:0.05em solid">Windows Özelliklerini Etkinleştir:</span></mark><ul id="1194463f-3348-8082-bfa6-c8eab01e84bc" class="bulleted-list"><li style="list-style-type:circle">Windows 10:<ul id="1194463f-3348-80ee-b627-dc25632345ec" class="bulleted-list"><li style="list-style-type:square">Başlat menüsünde &quot;Windows özellikleri&quot; yazın ve açılan sonuçtan &quot;Windows özelliklerini aç veya kapat&quot;ı seçin.</li></ul><ul id="1194463f-3348-8087-bf27-e9aa4ed9c80a" class="bulleted-list"><li style="list-style-type:square">&quot;Hyper-V&quot; seçeneğini işaretleyin ve Tamam&#x27;a tıklayın.</li></ul><ul id="1194463f-3348-800f-aef3-eb34e171a8e9" class="bulleted-list"><li style="list-style-type:square">Bilgisayarınızı yeniden başlatın.</li></ul></li></ul><ul id="1194463f-3348-802f-bdbf-f86c9625bfbb" class="bulleted-list"><li style="list-style-type:circle">Windows 11:<ul id="1194463f-3348-8046-9d24-f86775564613" class="bulleted-list"><li style="list-style-type:square">Başlat menüsünde aşağıdaki yolu takip ediniz.</li></ul><ul id="1194463f-3348-8081-b603-f83ee7585b39" class="bulleted-list"><li style="list-style-type:square">“Hyper -V” seçeneğini etkinleştirin.</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1194463f-3348-80c5-82fb-dfe33ab93e7f" class="code"><code class="language-Mermaid">graph
+  Başlat --&gt; Ayarlar--&gt; Uygulamalar --&gt; Özellikler --&gt; Windows&#x27;un_isteğe_bağlı_özellikleri --&gt; Hyper-V</code></pre></li></ul></li></ul><p id="1194463f-3348-8079-b265-fc4c8a1dfe0a" class="">
+</p><ul id="1194463f-3348-809b-ae45-ed26306ccc5f" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-yellow_background">Sanallaştırmanın Etkin Olup Olmadığını Kontrol Etme:</mark><ul id="1194463f-3348-803c-a12f-eb5cf2d701da" class="bulleted-list"><li style="list-style-type:circle">Görev Yöneticisi:<ul id="1194463f-3348-8078-b5e6-f51b4d531367" class="bulleted-list"><li style="list-style-type:square">Görev Yöneticisini açın (Ctrl+Shift+Esc).</li></ul><ul id="1194463f-3348-8065-ab03-fe668c09911f" class="bulleted-list"><li style="list-style-type:square">Performans sekmesine gidin ve CPU bölümünde sanallaştırma ile ilgili bir bilgi olup olmadığını kontrol edin.</li></ul></li></ul><ul id="1194463f-3348-8034-8555-f0296eb10c39" class="bulleted-list"><li style="list-style-type:circle">Komut İstemi:<ul id="1194463f-3348-80e7-a2b4-c447b95e64a0" class="bulleted-list"><li style="list-style-type:square">Komut istemini açin (cmd) ve <code>systeminfo</code> komutunu çalıştırın. Çıktıda sanallaştırma ile ilgili bilgiler yer alacaktır.</li></ul></li></ul></li></ul><p id="1194463f-3348-80df-8fab-ebf6a1ddf8f6" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
